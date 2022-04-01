@@ -9,6 +9,9 @@ workspace "StreamEngine"
 
 output_directory = "%{cfg.buildcfg}"
 
+ThirdParty = {}
+ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
+
 project "Game"
     location "Game"
     kind "ConsoleApp"
@@ -60,7 +63,16 @@ project "Engine"
     }
 
     includedirs {
-        "%{prj.name}/Source"
+        "%{prj.name}/Source",
+        "%{ThirdParty.GLFW}/include"
+    }
+    
+    libdirs {
+        "%{ThirdParty.GLFW}/lib"
+    }
+
+    links {
+        "glfw3_mt.lib"
     }
 
     filter "system.windows"
