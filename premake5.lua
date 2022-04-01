@@ -11,6 +11,8 @@ output_directory = "%{cfg.buildcfg}"
 
 ThirdParty = {}
 ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
+ThirdParty["GLAD"] = "Engine/ThirdParty/GLAD"
+
 
 project "Game"
     location "Game"
@@ -59,11 +61,17 @@ project "Engine"
 
     files {
         "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp"
+        "%{prj.name}/Source/**.cpp",
+
+        -- Third Party
+        "%{ThirdParty.GLAD}/**.c"
     }
 
     includedirs {
         "%{prj.name}/Source",
+        
+        -- Third Party
+        "%{ThirdParty.GLAD}/include",
         "%{ThirdParty.GLFW}/include"
     }
     
@@ -72,6 +80,7 @@ project "Engine"
     }
 
     links {
+        "opengl32.lib",
         "glfw3_mt.lib"
     }
 
