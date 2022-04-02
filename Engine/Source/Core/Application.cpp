@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Renderer/Renderer.h"
 
 namespace SE {
 	Application::Application() {
@@ -13,6 +14,10 @@ namespace SE {
 		if (m_IsRunning) {
 			// TODO: Out some info for debugging purposes
 			return false;
+		}
+
+		if (Renderer::Initialize()) {
+			// TODO: Notify user of error
 		}
 
 		// TODO: Initialize window
@@ -30,6 +35,10 @@ namespace SE {
 		if (!m_IsRunning) {
 			// TODO: Out some info for debugging purposes
 			return false;
+		}
+
+		if (Renderer::Shutdown()) {
+			// TODO: Notify user of error
 		}
 
 		// TODO: Destroy window

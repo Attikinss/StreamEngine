@@ -14,7 +14,9 @@ namespace SE {
             return glfwCreateWindow(mode->width, mode->height, title.c_str(), monitor, nullptr);
         }
 
-        return glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+        GLFWwindow* windowHandle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+        glfwMakeContextCurrent(windowHandle);
+        return windowHandle;
     }
 
     Window::Window(const std::string& title, int32_t width, int32_t height, bool fullscreen)

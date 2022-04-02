@@ -1,6 +1,7 @@
 #include "GLStateManager.h"
 
 #include <glad/gl.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 
 namespace SE {
@@ -22,28 +23,50 @@ namespace SE {
 
 	static GLStateInfo s_StateInfo;
 
+	static bool s_GladInitialized = false;
+
+	static void CheckGladState() {
+		if (s_GladInitialized) {
+			return;
+		}
+
+		// Initialise glad
+		// A context MUST be set before this can return a successful result
+		int gladStatus = gladLoadGL((GLADloadfunc)glfwGetProcAddress);
+		_ASSERT(gladStatus);
+		s_GladInitialized = true;
+
+		glEnable(GL_BLEND);
+	}
+
 	void GLStateManager::EnableCull() {
+		CheckGladState();
 		s_StateInfo.CullState.Enable();
 	}
 
 	void GLStateManager::DisableCull() {
+		CheckGladState();
 		s_StateInfo.CullState.Disable();
 	}
 
 	void GLStateManager::CullFace(CullMode mode) {
+		CheckGladState();
 		CullFace((int)mode);
 	}
 
 	void GLStateManager::CullFace(int mode) {
+		CheckGladState();
 		s_StateInfo.CullState.Mode = mode;
 		glCullFace(mode);
 	}
 
 	void GLStateManager::EnableDepthTest() {
+		CheckGladState();
 		s_StateInfo.DepthState.Enable();
 	}
 
 	void GLStateManager::DisableDepthTest() {
+		CheckGladState();
 		s_StateInfo.DepthState.Disable();
 	}
 
@@ -52,6 +75,7 @@ namespace SE {
 	}
 
 	void GLStateManager::DepthFunc(int func) {
+		CheckGladState();
 		if (func == s_StateInfo.DepthState.Func) {
 			return;
 		}
@@ -61,6 +85,7 @@ namespace SE {
 	}
 
 	void GLStateManager::DepthMask(bool mask) {
+		CheckGladState();
 		if (mask == s_StateInfo.DepthState.Mask) {
 			return;
 		}
@@ -70,10 +95,12 @@ namespace SE {
 	}
 
 	void GLStateManager::EnableBlend() {
+		CheckGladState();
 		s_StateInfo.CullState.Enable();
 	}
 
 	void GLStateManager::DisableBlend() {
+		CheckGladState();
 		s_StateInfo.CullState.Disable();
 	}
 
@@ -82,6 +109,7 @@ namespace SE {
 	}
 
 	void GLStateManager::BlendFunc(int srcRgb, int destRgb) {
+		CheckGladState();
 		if (srcRgb == s_StateInfo.BlendState.SrcRGB && destRgb == s_StateInfo.BlendState.DestRGB) {
 			return;
 		}
@@ -97,6 +125,8 @@ namespace SE {
 	}
 
 	void GLStateManager::BlendFuncSeparate(int srcRgb, int destRgb, int srcAlpha, int destAlpha) {
+		CheckGladState();
+
 		if (srcRgb == s_StateInfo.BlendState.SrcRGB && destRgb == s_StateInfo.BlendState.DestRGB &&
 			srcAlpha == s_StateInfo.BlendState.SrcAlpha && destAlpha == s_StateInfo.BlendState.DestAlpha) {
 			return;
@@ -111,6 +141,8 @@ namespace SE {
 	}
 
 	void GLStateManager::Clear() {
+		CheckGladState();
+
 		int flags = GL_COLOR_BUFFER_BIT;
 		if (s_StateInfo.DepthState.IsEnabled()) {
 			flags |= GL_DEPTH_BUFFER_BIT;
@@ -120,6 +152,7 @@ namespace SE {
 	}
 
 	void GLStateManager::SetClearColour(float r, float g, float b, float a) {
+		CheckGladState();
 		s_StateInfo.ClearColour = { r, g, b, a };
 		glClearColor(r, g, b, a);
 	}
@@ -129,10 +162,12 @@ namespace SE {
 	}
 
 	void GLStateManager::DrawArrays(unsigned int count, unsigned int first) {
+		CheckGladState();
 		glDrawArrays((unsigned int)s_StateInfo.DrawPrimitive, first, count);
 	}
 
 	void GLStateManager::InfoDump() {
+		CheckGladState();
 		std::cout << "OpenGL Info:"
 				  << "\n\tVersion: " << glGetString(GL_VERSION)
 				  << "\n\tVendor: " << glGetString(GL_VENDOR)
