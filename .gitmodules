@@ -1,3 +1,6 @@
 [submodule "Engine/ThirdParty/GLM"]
 	path = Engine/ThirdParty/GLM
 	url = https://github.com/g-truc/glm
+[submodule "Engine/ThirdParty/Spdlog"]
+	path = Engine/ThirdParty/Spdlog
+	url = https://github.com/gabime/spdlog

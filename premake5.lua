@@ -13,7 +13,7 @@ ThirdParty = {}
 ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
 ThirdParty["GLAD"] = "Engine/ThirdParty/GLAD"
 ThirdParty["GLM"] = "Engine/ThirdParty/GLM"
-
+ThirdParty["Spdlog"] = "Engine/ThirdParty/Spdlog"
 
 project "Game"
     location "Game"
@@ -35,7 +35,8 @@ project "Game"
         "Engine/Source",
 
         -- Third Party
-        "%{ThirdParty.GLFW}"
+        "%{ThirdParty.GLFW}",
+        "%{ThirdParty.Spdlog}/include"
     }
 
     links {
@@ -77,7 +78,8 @@ project "Engine"
         -- Third Party
         "%{ThirdParty.GLAD}/include",
         "%{ThirdParty.GLFW}/include",
-        "%{ThirdParty.GLM}"
+        "%{ThirdParty.GLM}",
+        "%{ThirdParty.Spdlog}/include"
     }
     
     libdirs {
