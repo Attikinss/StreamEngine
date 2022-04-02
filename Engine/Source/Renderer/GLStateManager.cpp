@@ -52,16 +52,18 @@ namespace SE {
 	}
 
 	void GLStateManager::DepthFunc(int func) {
-		if (func == s_StateInfo.DepthState.Func)
+		if (func == s_StateInfo.DepthState.Func) {
 			return;
+		}
 
 		s_StateInfo.DepthState.Func = func;
 		glDepthFunc(func);
 	}
 
 	void GLStateManager::DepthMask(bool mask) {
-		if (mask == s_StateInfo.DepthState.Mask)
+		if (mask == s_StateInfo.DepthState.Mask) {
 			return;
+		}
 
 		s_StateInfo.DepthState.Mask = mask;
 		glDepthMask(mask);
@@ -80,8 +82,9 @@ namespace SE {
 	}
 
 	void GLStateManager::BlendFunc(int srcRgb, int destRgb) {
-		if (srcRgb == s_StateInfo.BlendState.SrcRGB && destRgb == s_StateInfo.BlendState.DestRGB)
+		if (srcRgb == s_StateInfo.BlendState.SrcRGB && destRgb == s_StateInfo.BlendState.DestRGB) {
 			return;
+		}
 
 		s_StateInfo.BlendState.SrcRGB = srcRgb;
 		s_StateInfo.BlendState.DestRGB = destRgb;
@@ -95,8 +98,9 @@ namespace SE {
 
 	void GLStateManager::BlendFuncSeparate(int srcRgb, int destRgb, int srcAlpha, int destAlpha) {
 		if (srcRgb == s_StateInfo.BlendState.SrcRGB && destRgb == s_StateInfo.BlendState.DestRGB &&
-			srcAlpha == s_StateInfo.BlendState.SrcAlpha && destAlpha == s_StateInfo.BlendState.DestAlpha)
+			srcAlpha == s_StateInfo.BlendState.SrcAlpha && destAlpha == s_StateInfo.BlendState.DestAlpha) {
 			return;
+		}
 
 		s_StateInfo.BlendState.SrcRGB = srcRgb;
 		s_StateInfo.BlendState.DestRGB = destRgb;
@@ -108,8 +112,9 @@ namespace SE {
 
 	void GLStateManager::Clear() {
 		int flags = GL_COLOR_BUFFER_BIT;
-		if (s_StateInfo.DepthState.IsEnabled())
+		if (s_StateInfo.DepthState.IsEnabled()) {
 			flags |= GL_DEPTH_BUFFER_BIT;
+		}
 
 		glClear(flags);
 	}

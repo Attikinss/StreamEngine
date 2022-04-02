@@ -103,7 +103,9 @@ namespace SE {
 
 	class GLBlendState : public GLState {
 	public:
-		GLBlendState() : GLState(StateType::BLEND) {}
+		GLBlendState()
+			: GLState(StateType::BLEND) {
+		}
 
 	public:
 		int SrcRGB = (int)SrcFactor::ONE;
@@ -114,7 +116,9 @@ namespace SE {
 
 	class GLCullState : public GLState {
 	public:
-		GLCullState() : GLState(StateType::CULL_FACE) {}
+		GLCullState()
+			: GLState(StateType::CULL_FACE) {
+		}
 
 	public:
 		int Mode = (int)CullMode::BACK;
@@ -122,7 +126,9 @@ namespace SE {
 
 	class GLDepthState : public GLState {
 	public:
-		GLDepthState() : GLState(StateType::DEPTH_TEST) {}
+		GLDepthState()
+			: GLState(StateType::DEPTH_TEST) {
+		}
 
 	public:
 		bool Mask = true;
