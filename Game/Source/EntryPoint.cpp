@@ -1,8 +1,8 @@
-#include "GameApplication.h"
+#include "StreamEngine.h"
 
 int main() {
 	int runResult = 0;
-	GameApplication* app = new GameApplication();
+	SE::Application* app = new SE::Application();
 	if (app->Initialize()) {
 		app->Run();
 		
