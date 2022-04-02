@@ -12,6 +12,7 @@ output_directory = "%{cfg.buildcfg}"
 ThirdParty = {}
 ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
 ThirdParty["GLAD"] = "Engine/ThirdParty/GLAD"
+ThirdParty["GLM"] = "Engine/ThirdParty/GLM"
 
 
 project "Game"
@@ -31,7 +32,10 @@ project "Game"
 
     includedirs {
         "%{prj.name}/Source",
-        "Engine/Source"
+        "Engine/Source",
+
+        -- Third Party
+        "%{ThirdParty.GLFW}"
     }
 
     links {
@@ -72,7 +76,8 @@ project "Engine"
         
         -- Third Party
         "%{ThirdParty.GLAD}/include",
-        "%{ThirdParty.GLFW}/include"
+        "%{ThirdParty.GLFW}/include",
+        "%{ThirdParty.GLM}"
     }
     
     libdirs {
