@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "Logger.h"
+
 #include "Renderer/Renderer.h"
 
 namespace SE {
@@ -16,6 +18,7 @@ namespace SE {
 			return false;
 		}
 
+		Logger::Initialise();
 		if (Renderer::Initialize()) {
 			// TODO: Notify user of error
 		}

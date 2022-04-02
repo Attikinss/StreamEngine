@@ -1,8 +1,8 @@
 #include "Shader.h"
 
-#include <algorithm>
+#include "Core/Logger.h"
+
 #include <fstream>
-#include <iostream>
 #include <glad/gl.h>
 
 namespace SE {
@@ -122,7 +122,7 @@ namespace SE {
             if (!success) {
                 // Freak out if it didn't work
                 glGetShaderInfoLog(shaderHandle, 1024, NULL, infoLog);
-                std::cout << "Shader compilation failed: [" << m_Name << "]\n\t\t" << infoLog << std::endl;
+                Logger::Error("Shader compilation failed: [{0}]\n\t\t", m_Name, infoLog);
 
                 // Delete the shader
                 glDeleteShader(shaderHandle);
@@ -151,7 +151,7 @@ namespace SE {
         if (!success) {
             // Freak out if it didn't work
             glGetProgramInfoLog(m_Handle, 1024, NULL, infoLog);
-            std::cout << "Shader linking failed\n" << infoLog << std::endl;
+            Logger::Error("Shader linking failed\n{0}", infoLog);
 
             // Delete the shader program
             glDeleteProgram(m_Handle);
@@ -179,10 +179,12 @@ namespace SE {
 
         int32_t uniformLocation = glGetUniformLocation(m_Handle, name.c_str());
 
-        if (uniformLocation != -1)
+        if (uniformLocation != -1) {
             m_UniformLocations[name] = uniformLocation;
-        else
-            std::cout << "Invalid uniform name called: " << name << std::endl;
+        }
+        else {
+            Logger::Error("Invalid uniform name called: {0}", name);
+        }
 
         return uniformLocation;
     }

@@ -1,18 +1,18 @@
 #include "Renderer.h"
 #include "GLStateManager.h"
 
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace SE {
     bool Renderer::Initialize() {
-        std::cout << "Renderer Initialized..." << std::endl;
+        Logger::Trace("Renderer Initialised...");
 
         GLStateManager::InfoDump();
         return true;
     }
 
     bool Renderer::Shutdown() {
-        std::cout << "Renderer Shutdown..." << std::endl;
+        Logger::Trace("Renderer Shutdown...");
         return true;
     }
 

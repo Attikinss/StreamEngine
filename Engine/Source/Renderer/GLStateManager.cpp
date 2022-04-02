@@ -1,8 +1,9 @@
 #include "GLStateManager.h"
 
+#include "Core/Logger.h"
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 namespace SE {
 	struct Color {
@@ -168,10 +169,7 @@ namespace SE {
 
 	void GLStateManager::InfoDump() {
 		CheckGladState();
-		std::cout << "OpenGL Info:"
-				  << "\n\tVersion: " << glGetString(GL_VERSION)
-				  << "\n\tVendor: " << glGetString(GL_VENDOR)
-				  << "\n\tDevice: " << glGetString(GL_RENDERER)
-				  << std::endl;
+		Logger::Info("OpenGL Info:\n\tVersion: {0}\n\tVendor: {1}\n\tDevice: {2}",
+			glGetString(GL_VERSION), glGetString(GL_VENDOR), glGetString(GL_RENDERER));
 	}
 }
