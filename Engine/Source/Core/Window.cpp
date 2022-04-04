@@ -7,6 +7,11 @@ namespace SE {
         // Initialize glfw if not already
         glfwInit();
 
+        // TODO: Move into a context class
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
         if (fullscreen) {
             GLFWmonitor* monitor = glfwGetPrimaryMonitor();
             const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -49,6 +54,10 @@ namespace SE {
 
     const std::string& Window::GetTitle() const {
         return m_Title;
+    }
+
+    GLFWwindow* Window::GetHandle() const {
+        return m_WindowHandle;
     }
 
     bool Window::ShouldClose() const {

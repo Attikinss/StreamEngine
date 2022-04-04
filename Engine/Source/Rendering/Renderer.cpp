@@ -8,6 +8,7 @@ namespace SE {
         Logger::Trace("Renderer Initialised...");
 
         GLStateManager::InfoDump();
+        GLStateManager::EnableDepthTest();
         GLStateManager::SetClearColour(0.15f, 0.15f, 0.15f);
         return true;
     }

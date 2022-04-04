@@ -55,7 +55,7 @@ namespace SE {
 			}
 
 			// Create texture/image
-			CreateTexture(createInfo);
+			Recreate(createInfo);
 		}
 		else {
 			Logger::Error("Failed to load texture: Invalid file!");
@@ -66,7 +66,7 @@ namespace SE {
 	}
 
 	Texture2D::Texture2D(const TextureCreateInfo& createInfo) {
-		CreateTexture(createInfo);
+		Recreate(createInfo);
 	}
 
 	Texture2D::~Texture2D() {
@@ -86,14 +86,13 @@ namespace SE {
 		m_BindingUnit = unit;
 	}
 
-	void Texture2D::CreateTexture(const TextureCreateInfo& createInfo) {
+	void Texture2D::Recreate(const TextureCreateInfo& createInfo) {
+		if (m_Handle) {
+			glDeleteTextures(1, &m_Handle);
+		}
+
 		// Create and bind texture
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_Handle);
-		SetBindingUnit(0);
-		Bind();
-
-		// Specify how texture is stored
-		glTextureStorage2D(m_Handle, 1, createInfo.InternalFormat, createInfo.Width, createInfo.Height);
 
 		// Setup texture filtering
 		glTextureParameteri(m_Handle, GL_TEXTURE_MIN_FILTER, createInfo.MinFilter);
@@ -104,8 +103,18 @@ namespace SE {
 		glTextureParameteri(m_Handle, GL_TEXTURE_WRAP_S, createInfo.WrapModeS);
 		glTextureParameteri(m_Handle, GL_TEXTURE_WRAP_T, createInfo.WrapModeT);
 
-		// Specify texture format and data to be written
-		glTextureSubImage2D(m_Handle, 0, 0, 0, createInfo.Width, createInfo.Height, createInfo.Format, createInfo.DataType, createInfo.PixelData);
+		if (createInfo.PixelData) {
+			// Specify how texture is stored
+			glTextureStorage2D(m_Handle, 1, createInfo.InternalFormat, createInfo.Width, createInfo.Height);
+
+			// Specify texture format and data to be written
+			glTextureSubImage2D(m_Handle, 0, 0, 0, createInfo.Width, createInfo.Height, createInfo.Format, createInfo.DataType, createInfo.PixelData);
+		}
+		else {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, m_Handle);
+			glTexImage2D(GL_TEXTURE_2D, 0, createInfo.InternalFormat, createInfo.Width, createInfo.Height, 0, createInfo.Format, createInfo.DataType, createInfo.PixelData);
+		}
 		
 		if (createInfo.GenerateMips) {
 			glGenerateTextureMipmap(m_Handle);

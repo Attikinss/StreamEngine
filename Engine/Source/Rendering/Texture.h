@@ -46,9 +46,7 @@ namespace SE {
 		void Unbind() override;
 
 		void SetBindingUnit(uint32_t unit);
-
-	private:
-		void CreateTexture(const TextureCreateInfo& createInfo);
+		void Recreate(const TextureCreateInfo& createInfo);
 
 	private:
 		uint32_t m_BindingUnit = 0;

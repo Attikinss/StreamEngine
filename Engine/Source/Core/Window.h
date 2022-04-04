@@ -15,6 +15,7 @@ namespace SE {
 		bool ShouldClose() const;
 		std::pair<float, float> GetSize() const;
 		const std::string& GetTitle() const;
+		GLFWwindow* GetHandle() const;
 
 	private:
 		GLFWwindow* m_WindowHandle;
