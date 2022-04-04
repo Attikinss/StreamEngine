@@ -1,4 +1,6 @@
 #pragma once
+#include "IBindable.h"
+
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -16,7 +18,7 @@ namespace SE {
 
 	// TODO: Create Shader instances so that the same Shader
 	//		 can be changed on a material to material basis
-	class Shader {
+	class Shader : public IBindable {
 	public:
 		static std::shared_ptr<Shader> Create(const std::vector<std::string>& filepaths);
 		static std::shared_ptr<Shader> Create(const std::initializer_list<std::string>& filepaths);
@@ -24,8 +26,8 @@ namespace SE {
 		Shader(const std::vector<std::string>& filepaths);
 
 		void Recompile();
-		void Bind();
-		void Unbind();
+		void Bind() override;
+		void Unbind() override;
 
 		void BindAttribute(uint32_t index, const std::string& name);
 		void SetUniform(const std::string& name, uint32_t value);
@@ -42,7 +44,6 @@ namespace SE {
 		void Compile(const std::unordered_map<ShaderType, std::string>& sources);
 
 	private:
-		uint32_t m_Handle = 0;
 		std::string m_Name;
 		std::vector<std::string> m_Filepaths;
 
