@@ -10,6 +10,7 @@ workspace "StreamEngine"
 output_directory = "%{cfg.buildcfg}"
 
 ThirdParty = {}
+ThirdParty["ENTT"] = "Engine/ThirdParty/ENTT"
 ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
 ThirdParty["GLAD"] = "Engine/ThirdParty/GLAD"
 ThirdParty["GLM"] = "Engine/ThirdParty/GLM"
@@ -76,6 +77,7 @@ project "Engine"
         "%{prj.name}/Source",
         
         -- Third Party
+        "%{ThirdParty.ENTT}",
         "%{ThirdParty.GLAD}/include",
         "%{ThirdParty.GLFW}/include",
         "%{ThirdParty.GLM}",
