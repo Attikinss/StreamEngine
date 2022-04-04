@@ -64,12 +64,12 @@ namespace SE {
 			uint32_t normalized = element.Normalised ? GL_TRUE : GL_FALSE;
 			uint32_t offset = element.Offset;
 
-			uint32_t glAttribs = components <= 4 ? 1 : ceil(components / 4);
+			uint32_t glAttribs = components <= 4 ? 1 : (uint32_t)ceil(components / 4);
 			for (uint32_t i = 0; i < glAttribs; i++, index++) {
 				uint32_t dataOffset = (offset + components * i);
 
 				glEnableVertexAttribArray(m_AttributeCount + index);
-				glVertexAttribPointer(m_AttributeCount + index, components / glAttribs, valueType, normalized, stride, (void*)dataOffset);
+				glVertexAttribPointer(m_AttributeCount + index, components / glAttribs, valueType, normalized, stride, (void*)(uint64_t)dataOffset);
 
 				if (element.Instanced) {
 					glVertexAttribDivisor(m_AttributeCount + index, 1);
