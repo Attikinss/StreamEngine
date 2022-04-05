@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Logger.h"
-#include "Component.h"
+#include "Components/Component.h"
 #include "Scene.h"
 
 #include <entt/entt.hpp>
@@ -12,7 +12,6 @@ namespace SE {
 		Entity(Scene* scene, entt::entity handle);
 		~Entity();
 
-		void SetEnabled(bool enabled);
 		void Destroy();
 
 		template<typename T, typename... Args>
@@ -23,8 +22,6 @@ namespace SE {
 			}
 
 			Component& component = m_Scene->GetRegistry().AddComponent<T>(m_Handle, std::forward<Args>(args)...);
-			component.m_Entity = this;
-
 			return (T&)component;
 		}
 
@@ -56,9 +53,6 @@ namespace SE {
 		uint32_t GetHandle() const { return (uint32_t)m_Handle; }
 		bool operator==(const Entity& other) const { return m_Handle == other.m_Handle; }
 		bool operator!=(const Entity& other) const { return !(*this == other); }
-
-	public:
-		bool IsEnabled = true;
 
 	private:
 		entt::entity m_Handle = entt::null;

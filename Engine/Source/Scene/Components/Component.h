@@ -3,18 +3,16 @@
 namespace SE {
 	class Component {
 		friend class Entity;
+		friend class Scene;
 
 	public:
 		Component() = default;
 		virtual ~Component() = default;
 
-		virtual void OnUpdate() = 0;
-		virtual void OnFixedUpdate() = 0;
+		virtual void OnUpdate() {}
+		virtual void OnFixedUpdate() {}
 
 	public:
 		bool IsEnabled = true;
-
-	protected:
-		Entity* m_Entity = nullptr;
 	};
 }

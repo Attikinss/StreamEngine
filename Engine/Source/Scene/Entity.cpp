@@ -10,10 +10,6 @@ namespace SE {
 		m_Scene = nullptr;
 	}
 
-	void Entity::SetEnabled(bool enabled) {
-		IsEnabled = enabled;
-	}
-
 	void Entity::Destroy() {
 		m_Scene->DestroyEntity(*this);
 	}

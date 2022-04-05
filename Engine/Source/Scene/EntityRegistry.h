@@ -6,6 +6,9 @@
 namespace SE {
 	class Entity;
 
+	template<typename T>
+	using ComponentCollection = entt::basic_view<entt::entity, entt::exclude_t<>, T>;
+
 	class EntityRegistry {
 	public:
 		EntityRegistry();
@@ -25,7 +28,7 @@ namespace SE {
 		}
 
 		template<typename T>
-		T& GetCopmonent(entt::entity handle) {
+		T& GetComponent(entt::entity handle) {
 			return m_Registry.get<T>(handle);
 		}
 
@@ -41,16 +44,8 @@ namespace SE {
 		}
 
 		template<typename T>
-		std::vector<T&> GetComponentsOfType() {
-			auto view = m_Registry.view<T>();
-			std::vector<T&> components;
-
-			for (auto entity : view) {
-				T& comp = view.get<T>(entity);
-				components.push_back(comp);
-			}
-
-			return components;
+		ComponentCollection<T> GetComponentsOfType() {
+			return m_Registry.view<T>();
 		}
 
 	private:
