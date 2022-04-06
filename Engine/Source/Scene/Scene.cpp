@@ -4,6 +4,7 @@
 #include "Components/Component.h"
 #include "Components/EntityInfo.h"
 #include "Components/Transform2D.h"
+#include "Components/WorldCamera.h"
 
 #include <entt/entt.hpp>
 
@@ -33,6 +34,18 @@ namespace SE {
             }
 
             transform.UpdateTransform();
+        }
+
+        auto cameraView = s_CurrentScene->m_Registry.GetComponentsOfType<WorldCamera>();
+        for (auto& entity : cameraView) {
+            // Get component from view
+            WorldCamera& camera = cameraView.get<WorldCamera>(entity);
+            if (!camera.IsEnabled) {
+                continue;
+            }
+
+            glm::mat4 transform = transformView.get<Transform2D>(entity).GetTransform();
+            camera.GetCamera().SetView(glm::inverse(transform));
         }
     }
 
