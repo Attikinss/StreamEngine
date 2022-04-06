@@ -189,6 +189,11 @@ namespace SE {
         return uniformLocation;
     }
 
+    void Shader::SetUniform(const std::string& name, bool value) {
+        GLint location = GetUniformLocation(name.c_str());
+        glUniform1i(location, value ? 1: 0);
+    }
+
     void Shader::SetUniform(const std::string& name, uint32_t value) {
         GLint location = GetUniformLocation(name.c_str());
         glUniform1ui(location, value);

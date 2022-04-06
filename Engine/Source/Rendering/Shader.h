@@ -30,6 +30,7 @@ namespace SE {
 		void Unbind() override;
 
 		void BindAttribute(uint32_t index, const std::string& name);
+		void SetUniform(const std::string& name, bool value);
 		void SetUniform(const std::string& name, uint32_t value);
 		void SetUniform(const std::string& name, int32_t value);
 		void SetUniform(const std::string& name, float value);
