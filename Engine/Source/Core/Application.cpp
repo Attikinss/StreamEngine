@@ -1,16 +1,23 @@
 #include "Application.h"
+#include "Input.h"
 #include "Logger.h"
+#include "Time.h"
 
-#include "Renderer/Renderer.h"
+#include "Rendering/Camera.h"
+#include "Rendering/Renderer.h"
+#include "Scene/Scene.h"
 
 namespace SE {
-	Application* Application::Create() {
-		return s_Instance ? nullptr : new Application();
+	Application* Application::Create(CommandLineArgs args) {
+		return s_Instance ? nullptr : new Application(args);
 	}
 
-	Application::Application() {
-		m_Window = new SE::Window("Stream Engine", 1280, 720);
+	Application::Application(CommandLineArgs args) {
 		s_Instance = this;
+
+		for (uint32_t i = 0; i < args.ArgsCount; i++) {
+			// Compare strings against map of [command, action]
+		}
 	}
 
 	Application::~Application() {
@@ -29,14 +36,23 @@ namespace SE {
 			// TODO: Notify user of error
 		}
 
-		// TODO: Initialize window
+		Input::Initialize();
+		Time::Initialize();
+
+		m_Window = new SE::Window("Stream Engine", 1280, 720);
 		return true;
 	}
 
 	void Application::Run() {
+		Camera cam(1280.0f, 720.0f);
+
 		while (!m_Window->ShouldClose()) {
-			m_Window->PollEvents();
-			m_Window->SwapBuffers();
+			OnUpdate();
+			Renderer::BeginFrame(cam);
+
+			/* Submit sprites here */
+
+			Renderer::EndFrame();
 		}
 	}
 
@@ -60,5 +76,17 @@ namespace SE {
 
 	Application& Application::Get() {
 		return *s_Instance;
+	}
+
+	void Application::OnUpdate() {
+		m_Window->PollEvents();
+		m_Window->SwapBuffers();
+		
+		Input::Update();
+		Time::Update();
+
+		// TODO: Update user made components
+
+		Scene::Update();
 	}
 }
