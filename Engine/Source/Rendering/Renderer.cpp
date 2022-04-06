@@ -44,7 +44,6 @@ namespace SE {
             quadVBO->SetLayout({
                 { DataType::FLOAT3, "a_Position" },
                 { DataType::FLOAT2, "a_UV" },
-                { DataType::MAT4, "a_Transform" },
             });
 
             QuadVAO = VertexArray::Create();
