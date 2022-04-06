@@ -4,7 +4,7 @@
 namespace SE {
 	std::shared_ptr<spdlog::logger> Logger::s_Logger = nullptr;
 
-	void Logger::Initialise() {
+	void Logger::Initialize() {
 		// Set formatting for log messages
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 

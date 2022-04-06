@@ -31,7 +31,7 @@ namespace SE {
 			return;
 		}
 
-		// Initialise glad
+		// Initialize glad
 		// A context MUST be set before this can return a successful result
 		int gladStatus = gladLoadGL((GLADloadfunc)glfwGetProcAddress);
 		_ASSERT(gladStatus);

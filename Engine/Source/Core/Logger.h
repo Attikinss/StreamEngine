@@ -8,7 +8,7 @@
 namespace SE {
 	class Logger {
 	public:
-		static void Initialise();
+		static void Initialize();
 
 		template<typename... Args>
 		static void Trace(const std::string& message, Args&& ...args) {
