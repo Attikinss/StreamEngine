@@ -11,14 +11,14 @@ namespace SE {
 
 	Framebuffer::Framebuffer(const FramebufferCreateInfo& createInfo)
 		: m_Width(createInfo.Width), m_Height(createInfo.Height) {
-		for (const auto& texture : createInfo.Attachments.Textures) {
+		for (const auto& format : createInfo.TextureFormats) {
 			// Specify info about desired attachments
-			switch (texture.Format) {
+			switch (format) {
 				case FramebufferTextureFormat::RGBA8:
-					m_ColorAttachmentFormats.emplace_back(texture.Format);
+					m_ColorAttachmentFormats.emplace_back(format);
 					break;
 				case FramebufferTextureFormat::DEPTH24_STENCIL8:
-					m_DepthAttachmentFormat = texture.Format;
+					m_DepthAttachmentFormat = format;
 					break;
 
 				case FramebufferTextureFormat::NONE:

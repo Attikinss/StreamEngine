@@ -33,11 +33,7 @@ namespace SE {
             FramebufferVAO = VertexArray::Create();
             FramebufferVAO->AddVertexBuffer(fbVBuffer);
 
-            FramebufferCreateInfo createInfo;
-            createInfo.Width = 1280;
-            createInfo.Height = 720;
-            createInfo.Attachments = { FramebufferTextureFormat::RGBA8 };
-            Framebuffer = Framebuffer::Create(createInfo);
+            Framebuffer = Framebuffer::Create({ 1280, 720, { FramebufferTextureFormat::RGBA8 } });
 
             std::vector<Vertex> vertData = Quad().ToVertexData();
             auto quadVBO = VertexBuffer::Create(sizeof(Vertex) * vertData.size(), vertData.data());
@@ -89,7 +85,6 @@ namespace SE {
     void Renderer::BeginFrame(const Camera& camera) {
         s_RendererData->Framebuffer->Bind();
         s_RendererData->ViewProjectionMatrix = camera.GetViewProjection();
-        //s_RendererData->FramebufferShader->SetUniform("u_ViewProjectionMatrix", camera.GetViewProjection());
         //glm::vec3 viewPosition = glm::inverse(camera.GetView())[3];
 
         GLStateManager::Clear();

@@ -11,27 +11,14 @@ namespace SE {
 		DEPTH24_STENCIL8,
 	};
 
-	struct FramebufferTextureInfo {
-		FramebufferTextureFormat Format;
-
-		FramebufferTextureInfo() = default;
-		FramebufferTextureInfo(FramebufferTextureFormat format)
-			: Format(format) {
-		}
-	};
-
-	struct FramebufferAttachmentInfo {
-		std::vector<FramebufferTextureInfo> Textures;
-
-		FramebufferAttachmentInfo() = default;
-		FramebufferAttachmentInfo(std::initializer_list<FramebufferTextureInfo> textures)
-			: Textures(textures) {
-		}
-	};
-
 	struct FramebufferCreateInfo {
 		uint32_t Width, Height;
-		FramebufferAttachmentInfo Attachments;
+		std::vector<FramebufferTextureFormat> TextureFormats;
+
+		FramebufferCreateInfo() = default;
+		FramebufferCreateInfo(uint32_t width, uint32_t height, std::initializer_list<FramebufferTextureFormat> formats)
+			: Width(width), Height(height), TextureFormats(formats) {
+		}
 	};
 
 	class Framebuffer : public IBindable {
