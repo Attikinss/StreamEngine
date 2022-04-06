@@ -10,6 +10,9 @@
 namespace SE {
     Scene::Scene(const std::string& name)
         : m_Name(name) {
+        if (s_CurrentScene == nullptr) {
+            s_CurrentScene = this;
+        }
     }
 
     Scene::~Scene() {
@@ -17,7 +20,11 @@ namespace SE {
     }
 
     void Scene::Update() {
-        auto transformView = m_Registry.GetComponentsOfType<Transform2D>();
+        if (s_CurrentScene == nullptr) {
+            return;
+        }
+
+        auto transformView = s_CurrentScene->m_Registry.GetComponentsOfType<Transform2D>();
         for (auto& entity : transformView) {
             // Get component from view
             Transform2D& transform = transformView.get<Transform2D>(entity);
@@ -30,7 +37,9 @@ namespace SE {
     }
 
     void Scene::FixedUpdate() {
-
+        if (s_CurrentScene == nullptr) {
+            return;
+        }
     }
 
     Entity Scene::CreateEntity(const std::string& name) {
@@ -43,5 +52,10 @@ namespace SE {
 
     void Scene::DestroyEntity(Entity entity) {
         m_Registry.Destroy((entt::entity)entity.GetHandle());
+    }
+
+    void Scene::SetCurrent() {
+        // TODO: Unload previous scene
+        s_CurrentScene = this;
     }
 }

@@ -9,13 +9,14 @@ namespace SE {
 		Scene(const std::string& name = "Untitled");
 		~Scene();
 
-		void Update();
-		void FixedUpdate();
-
 		Entity CreateEntity(const std::string& name = "Entity");
 		void DestroyEntity(Entity entity);
+		void SetCurrent();
 
 		EntityRegistry& GetRegistry() { return m_Registry; }
+
+		static void Update();
+		static void FixedUpdate();
 
 	private:
 		std::string m_Name;
@@ -23,5 +24,7 @@ namespace SE {
 		
 		EntityRegistry m_Registry;
 		std::vector<Entity> m_Selection;
+
+		inline static Scene* s_CurrentScene = nullptr;
 	};
 }
