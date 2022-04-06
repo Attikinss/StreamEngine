@@ -7,7 +7,9 @@ namespace SE {
 	struct Quad {
 		Vertex Vertices[4];
 
-		Quad() = default;
+        Quad() : Quad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }) {
+        }
+
         Quad(const glm::vec3& position, const glm::vec2& scale) {
             Vertices[0].Position = position + glm::vec3(-scale.x * 0.5f, -scale.y * 0.5f, 0.0f);
             Vertices[1].Position = position + glm::vec3(-scale.x * 0.5f,  scale.y * 0.5f, 0.0f);
