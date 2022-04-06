@@ -2,7 +2,7 @@
 
 int main() {
 	int runResult = 0;
-	SE::Application* app = new SE::Application();
+	SE::Application* app = SE::Application::Create();
 	if (app->Initialize()) {
 		app->Run();
 		
@@ -14,6 +14,8 @@ int main() {
 	else {
 		runResult = 1;
 	}
+
+	delete app;
 
 	return 0;
 }

@@ -4,11 +4,17 @@
 #include "Renderer/Renderer.h"
 
 namespace SE {
+	Application* Application::Create() {
+		return s_Instance ? nullptr : new Application();
+	}
+
 	Application::Application() {
 		m_Window = new SE::Window("Stream Engine", 1280, 720);
+		s_Instance = this;
 	}
 
 	Application::~Application() {
+		s_Instance = nullptr;
 		delete m_Window;
 	}
 

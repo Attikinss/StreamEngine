@@ -3,8 +3,11 @@
 
 namespace SE {
 	class Application {
-	public:
+	private:
 		Application();
+
+	public:
+		static Application* Create();
 		~Application();
 
 		bool Initialize();
@@ -14,5 +17,7 @@ namespace SE {
 	protected:
 		Window* m_Window = nullptr;
 		bool m_IsRunning = false;
+
+		inline static Application* s_Instance = nullptr;
 	};
 }
