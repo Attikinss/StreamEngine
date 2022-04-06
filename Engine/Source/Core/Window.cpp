@@ -1,9 +1,10 @@
 #include "Window.h"
+#include "Logger.h"
 
 #include <GLFW/glfw3.h>
 
 namespace SE {
-    static GLFWwindow* CreateWindow(const std::string& title, int32_t width, int32_t height, bool fullscreen) {
+    static GLFWwindow* CreateGLFWWindow(const std::string& title, int32_t width, int32_t height, bool fullscreen) {
         // Initialize glfw if not already
         glfwInit();
 
@@ -25,8 +26,8 @@ namespace SE {
     }
 
     Window::Window(const std::string& title, int32_t width, int32_t height, bool fullscreen)
-        : m_Title(title), m_Width(width), m_Height(height), m_IsFullscreen(fullscreen), m_WindowHandle(CreateWindow(title, width, height, fullscreen)) {
-
+        : m_Title(title), m_Width(width), m_Height(height), m_IsFullscreen(fullscreen), m_WindowHandle(CreateGLFWWindow(title, width, height, fullscreen)) {
+        Logger::Trace("Window Created...");
     }
 
     Window::~Window() {
@@ -35,6 +36,8 @@ namespace SE {
             glfwDestroyWindow(m_WindowHandle);
             m_WindowHandle = nullptr;
         }
+
+        Logger::Trace("Window Destroyed...");
 
         // TODO: Move somewhere that makes sense
         glfwTerminate();

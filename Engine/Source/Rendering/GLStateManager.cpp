@@ -36,8 +36,6 @@ namespace SE {
 		int gladStatus = gladLoadGL((GLADloadfunc)glfwGetProcAddress);
 		_ASSERT(gladStatus);
 		s_GladInitialized = true;
-
-		glEnable(GL_BLEND);
 	}
 
 	void GLStateManager::EnableCull() {

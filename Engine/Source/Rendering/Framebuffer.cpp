@@ -1,4 +1,5 @@
 #include "Framebuffer.h"
+#include "Core/Application.h"
 #include "Core/Logger.h"
 
 #include <glad/gl.h>
@@ -26,8 +27,13 @@ namespace SE {
 			}
 		}
 
-		// TODO: Get default window size if specified size is invalid
-		Recreate(createInfo.Width, createInfo.Height, true);
+		if (createInfo.Width == 0 || createInfo.Height == 0) {
+			auto[x, y] = Application::Get().GetWindow().GetSize();
+			Recreate(x, y, true);
+		}
+		else {
+			Recreate(createInfo.Width, createInfo.Height, true);
+		}
 	}
 
 	Framebuffer::~Framebuffer() {

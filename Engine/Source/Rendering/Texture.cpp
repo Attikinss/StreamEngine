@@ -78,7 +78,6 @@ namespace SE {
 	}
 
 	void Texture2D::Unbind() {
-		// TODO: Figure out if this causes issues internally
 		glBindTextureUnit(m_BindingUnit, 0);
 	}
 

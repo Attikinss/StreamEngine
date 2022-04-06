@@ -70,6 +70,9 @@ namespace SE {
 
         GLStateManager::InfoDump();
         GLStateManager::EnableDepthTest();
+        GLStateManager::EnableBlend();
+        GLStateManager::BlendFunc(SrcFactor::SRC_ALPHA, DestFactor::ONE_MINUS_SRC_ALPHA);
+
         GLStateManager::SetClearColour(0.15f, 0.15f, 0.15f);
 
         s_RendererData = new RendererData();
@@ -135,7 +138,6 @@ namespace SE {
             material->SetInt("u_Texture0", 0);
         }
 
-        // TODO: Render quad
         s_RendererData->QuadVAO->Bind();
         GLStateManager::DrawArrays(6, 0);
     }

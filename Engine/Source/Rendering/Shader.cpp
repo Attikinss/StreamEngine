@@ -72,7 +72,7 @@ namespace SE {
 
     void Shader::Compile(const std::unordered_map<ShaderType, std::string>& sources) {
         if (sources.empty()) {
-            // TODO: Notify user
+            Logger::Error("Failed to compile shader! No valid source code was provided.");
             return;
         }
 

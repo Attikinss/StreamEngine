@@ -22,28 +22,34 @@ namespace SE {
 
 	Application::~Application() {
 		s_Instance = nullptr;
-		delete m_Window;
+
+		if (m_Window) {
+			delete m_Window;
+			m_Window = nullptr;
+		}
 	}
 
 	bool Application::Initialize() {
 		if (m_IsRunning) {
-			// TODO: Out some info for debugging purposes
+			Logger::Error("Application is already running! Initialization process aborted.");
 			return false;
 		}
 
 		Logger::Initialize();
-		if (Renderer::Initialize()) {
-			// TODO: Notify user of error
-		}
-
 		Input::Initialize();
 		Time::Initialize();
 
 		m_Window = new SE::Window("Stream Engine", 1280, 720);
+		if (!Renderer::Initialize()) {
+			Logger::Critical("Renderer failed to initialize correctly!");
+		}
+
 		return true;
 	}
 
 	void Application::Run() {
+		m_IsRunning = true;
+
 		Camera cam(1280.0f, 720.0f);
 
 		while (!m_Window->ShouldClose()) {
@@ -58,15 +64,19 @@ namespace SE {
 
 	bool Application::Shutdown() {
 		if (!m_IsRunning) {
-			// TODO: Out some info for debugging purposes
+			Logger::Error("Application is not running! Shutdown process aborted.");
 			return false;
 		}
 
-		if (Renderer::Shutdown()) {
-			// TODO: Notify user of error
+		if (!Renderer::Shutdown()) {
+			Logger::Critical("Renderer failed to shutdown correctly!");
 		}
 
-		// TODO: Destroy window
+		if (m_Window) {
+			delete m_Window;
+			m_Window = nullptr;
+		}
+
 		return true;
 	}
 
