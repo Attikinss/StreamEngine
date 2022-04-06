@@ -1,28 +1,12 @@
 #include "Shader.h"
 
 #include "Core/Logger.h"
+#include "Utilities/File.h"
 
-#include <fstream>
 #include <glad/gl.h>
 
 namespace SE {
-    // TODO: Move to a dedicated file io class or something
     namespace Utilities {
-        static std::string ReadFromFile(const std::string& filepath) {
-            std::string contents;
-            std::ifstream file(filepath.c_str(), std::ios::in | std::ios::binary);
-
-            if (file) {
-                file.seekg(0, std::ios::end);
-                contents.resize(file.tellg());
-                file.seekg(0, std::ios::beg);
-                file.read(&contents[0], contents.size());
-            }
-
-            file.close();
-            return contents;
-        }
-
         static ShaderType GetTypeFromFilepath(const std::string& filepath) {
             std::string extension = filepath.substr(filepath.find_last_of('.') + 1);
 
@@ -63,7 +47,7 @@ namespace SE {
 
         for (const auto& path : filepaths) {
             // Read source from file and get shader type from file extension
-            std::string source = Utilities::ReadFromFile(path);
+            std::string source = File::ReadAllText(path);
             ShaderType type = Utilities::GetTypeFromFilepath(path);
 
             if (!source.empty() && type != ShaderType::INVALID) {
