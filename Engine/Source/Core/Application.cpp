@@ -24,7 +24,7 @@ namespace SE {
 			return false;
 		}
 
-		Logger::Initialise();
+		Logger::Initialize();
 		if (Renderer::Initialize()) {
 			// TODO: Notify user of error
 		}
@@ -52,5 +52,13 @@ namespace SE {
 
 		// TODO: Destroy window
 		return true;
+	}
+
+	const Window& Application::GetWindow() const {
+		return *m_Window;
+	}
+
+	Application& Application::Get() {
+		return *s_Instance;
 	}
 }
