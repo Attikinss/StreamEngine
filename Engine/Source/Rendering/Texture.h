@@ -25,8 +25,8 @@ namespace SE {
 		Texture() = default;
 		virtual ~Texture() = default;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
 		uint32_t GetHandle() const {
 			return m_Handle;
@@ -42,8 +42,8 @@ namespace SE {
 		Texture2D(const TextureCreateInfo& createInfo);
 		~Texture2D();
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 		void SetBindingUnit(uint32_t unit);
 		void Recreate(const TextureCreateInfo& createInfo);

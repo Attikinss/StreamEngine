@@ -28,14 +28,14 @@ namespace SE {
 		Framebuffer(const FramebufferCreateInfo& createInfo);
 		~Framebuffer();
 
-		void Bind() override;
-		void Unbind() override;
-		void BindTexture(uint32_t index) const;
+		void Bind() const override;
+		void Unbind() const override;
+		void BindTexture(uint32_t index, uint32_t unit = 0) const;
 
 		void Recreate(uint32_t width, uint32_t height, bool forceCreate = false);
 
 		std::pair<uint32_t, uint32_t> GetSize() const;
-		const Texture2D* GetColourAttachment(uint32_t index = 0) const;
+		const Texture2D& GetColourAttachment(uint32_t index = 0) const;
 
 	private:
 		uint32_t m_Width, m_Height;

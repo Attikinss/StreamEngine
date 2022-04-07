@@ -26,8 +26,8 @@ namespace SE {
 		Shader(const std::vector<std::string>& filepaths);
 
 		void Recompile();
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 		void BindAttribute(uint32_t index, const std::string& name);
 		void SetUniform(const std::string& name, bool value);

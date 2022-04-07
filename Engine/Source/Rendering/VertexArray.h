@@ -11,8 +11,8 @@ namespace SE {
 		VertexArray();
 		~VertexArray();
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 		void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer);
 

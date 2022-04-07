@@ -73,11 +73,11 @@ namespace SE {
 		glDeleteTextures(1, &m_Handle);
 	}
 
-	void Texture2D::Bind() {
+	void Texture2D::Bind() const {
 		glBindTextureUnit(m_BindingUnit, m_Handle);
 	}
 
-	void Texture2D::Unbind() {
+	void Texture2D::Unbind() const {
 		glBindTextureUnit(m_BindingUnit, 0);
 	}
 

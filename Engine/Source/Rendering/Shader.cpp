@@ -62,11 +62,11 @@ namespace SE {
 
     }
 
-    void Shader::Bind() {
+    void Shader::Bind() const {
         glUseProgram(m_Handle);
     }
 
-    void Shader::Unbind() {
+    void Shader::Unbind() const {
         glUseProgram(0);
     }
 

@@ -38,11 +38,11 @@ namespace SE {
 		m_Handle = 0;
 	}
 
-	void VertexArray::Bind() {
+	void VertexArray::Bind() const {
 		glBindVertexArray(m_Handle);
 	}
 
-	void VertexArray::Unbind() {
+	void VertexArray::Unbind() const {
 		glBindVertexArray(0);
 	}
 

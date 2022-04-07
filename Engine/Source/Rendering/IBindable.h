@@ -7,8 +7,8 @@ namespace SE {
 		IBindable() = default;
 		virtual ~IBindable() = default;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
 	protected:
 		uint32_t m_Handle = 0;

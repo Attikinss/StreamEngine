@@ -46,18 +46,19 @@ namespace SE {
 		delete m_DepthAttachment;
 	}
 
-	void Framebuffer::Bind() {
+	void Framebuffer::Bind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 		glViewport(0, 0, m_Width, m_Height);
 	}
 
-	void Framebuffer::Unbind() {
+	void Framebuffer::Unbind() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void Framebuffer::BindTexture(uint32_t index) const {
+	void Framebuffer::BindTexture(uint32_t index, uint32_t unit) const {
 		_ASSERT(index < m_ColorAttachments.size());
 
+		m_ColorAttachments[index]->SetBindingUnit(unit);
 		m_ColorAttachments[index]->Bind();
 	}
 
@@ -166,6 +167,7 @@ namespace SE {
 
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, newTex->GetHandle(), 0);
 				m_DepthAttachment = newTex;
+				m_DepthAttachment->Unbind();
 			}
 		}
 
@@ -189,9 +191,9 @@ namespace SE {
 		return { m_Width, m_Height };
 	}
 
-	const Texture2D* Framebuffer::GetColourAttachment(uint32_t index) const {
+	const Texture2D& Framebuffer::GetColourAttachment(uint32_t index) const {
 		_ASSERT(index < m_ColourAttachments.size());
 
-		return m_ColorAttachments[index];
+		return *m_ColorAttachments[index];
 	}
 }

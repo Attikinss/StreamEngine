@@ -13,8 +13,8 @@ namespace SE {
 		VertexBuffer(uint32_t size, void* data);
 		~VertexBuffer();
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 		void SetData(uint32_t size, void* data, uint32_t offset = 0);
 		void SetLayout(const BufferLayout& layout) {
