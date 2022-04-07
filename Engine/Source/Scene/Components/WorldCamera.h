@@ -5,7 +5,14 @@
 namespace SE {
 	class WorldCamera : public Component {
 	public:
-		WorldCamera() = default;
+		WorldCamera() {
+			m_Camera.SetViewSize({ 1280.0f, 720.0f });
+		}
+
+		WorldCamera(float viewWidth, float viewHeight) {
+			m_Camera.SetViewSize({ viewWidth, viewHeight });
+		}
+
 		~WorldCamera() = default;
 
 		Camera& GetCamera() { return m_Camera;  }
