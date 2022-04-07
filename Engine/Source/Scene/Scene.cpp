@@ -66,7 +66,7 @@ namespace SE {
     }
 
     void Scene::DestroyEntity(Entity entity) {
-        m_Registry->Destroy(entity.GetHandle());
+        m_Registry->Destroy((entt::entity)entity.GetHandle());
     }
 
     void Scene::SetCurrent() {

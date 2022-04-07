@@ -36,6 +36,7 @@ project "Game"
         "Engine/Source",
 
         -- Third Party
+        "%{ThirdParty.ENTT}",
         "%{ThirdParty.GLFW}",
         "%{ThirdParty.GLM}",
         "%{ThirdParty.Spdlog}/include"

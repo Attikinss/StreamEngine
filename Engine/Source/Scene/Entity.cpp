@@ -1,14 +1,7 @@
 #include "Entity.h"
 
-#include <entt/entt.hpp>
-
 namespace SE {
-	Entity::Entity()
-		: m_Handle((uint32_t)entt::null) {
-
-	}
-
-	Entity::Entity(Scene* scene, uint32_t handle)
+	Entity::Entity(Scene* scene, entt::entity handle)
 		: m_Scene(scene), m_Handle(handle) {
 
 	}

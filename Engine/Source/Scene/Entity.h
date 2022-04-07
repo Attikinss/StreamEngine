@@ -1,13 +1,14 @@
 #pragma once
 #include "Core/Logger.h"
 #include "Components/Component.h"
+#include "EntityRegistry.h"
 #include "Scene.h"
 
 namespace SE {
 	class Entity {
 	public:
-		Entity();
-		Entity(Scene* scene, uint32_t handle);
+		Entity() = default;
+		Entity(Scene* scene, entt::entity handle);
 		~Entity();
 
 		void Destroy();
@@ -25,7 +26,7 @@ namespace SE {
 
 		template<typename T>
 		void RemoveComponent() {
-			if (!HasComponent()) {
+			if (!HasComponent<T>()) {
 				Logger::Error("Entity does not have [{0}] component!", T::GetName());
 				_ASSERT(false);
 			}
@@ -53,7 +54,7 @@ namespace SE {
 		bool operator!=(const Entity& other) const { return !(*this == other); }
 
 	private:
-		uint32_t m_Handle;
+		entt::entity m_Handle = entt::null;
 		Scene* m_Scene = nullptr;
 	};
 }
