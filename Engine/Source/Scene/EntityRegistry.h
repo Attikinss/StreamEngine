@@ -14,33 +14,33 @@ namespace SE {
 		EntityRegistry();
 		~EntityRegistry();
 
-		entt::entity GenerateHandle();
-		void Destroy(entt::entity handle);
+		uint32_t GenerateHandle();
+		void Destroy(uint32_t handle);
 
 		template<typename T, typename... Args>
-		T& AddComponent(entt::entity handle, Args&&... args) {
-			return m_Registry.emplace<T>(handle, std::forward<Args>(args)...);
+		T& AddComponent(uint32_t handle, Args&&... args) {
+			return m_Registry.emplace<T>((entt::entity)handle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
-		void RemoveComponent(entt::entity handle) {
-			m_Registry.remove<T>(handle);
+		void RemoveComponent(uint32_t handle) {
+			m_Registry.remove<T>((entt::entity)handle);
 		}
 
 		template<typename T>
-		T& GetComponent(entt::entity handle) {
-			return m_Registry.get<T>(handle);
+		T& GetComponent(uint32_t handle) {
+			return m_Registry.get<T>((entt::entity)handle);
 		}
 
 		template<typename T>
-		bool TryGetComponent(entt::entity handle, T* out) {
-			out = m_Registry.try_get<T>(handle);
+		bool TryGetComponent(uint32_t handle, T* out) {
+			out = m_Registry.try_get<T>((entt::entity)handle);
 			return out != nullptr;
 		}
 
 		template<typename T>
-		bool HasComponent(entt::entity handle) {
-			return m_Registry.any_of<T>(handle);
+		bool HasComponent(uint32_t handle) {
+			return m_Registry.any_of<T>((entt::entity)handle);
 		}
 
 		template<typename T>

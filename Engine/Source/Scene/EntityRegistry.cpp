@@ -9,11 +9,11 @@ namespace SE {
 		m_Registry.clear();
 	}
 
-	entt::entity EntityRegistry::GenerateHandle() {
-		return m_Registry.create();
+	uint32_t EntityRegistry::GenerateHandle() {
+		return (uint32_t)m_Registry.create();
 	}
 
-	void EntityRegistry::Destroy(entt::entity handle) {
-		m_Registry.destroy(handle);
+	void EntityRegistry::Destroy(uint32_t handle) {
+		m_Registry.destroy((entt::entity)handle);
 	}
 }

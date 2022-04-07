@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Entity.h"
+#include "EntityRegistry.h"
 
 #include "Components/Component.h"
 #include "Components/EntityInfo.h"
@@ -10,7 +11,7 @@
 
 namespace SE {
     Scene::Scene(const std::string& name)
-        : m_Name(name) {
+        : m_Name(name), m_Registry(new EntityRegistry()) {
         if (s_CurrentScene == nullptr) {
             s_CurrentScene = this;
         }
@@ -18,6 +19,7 @@ namespace SE {
 
     Scene::~Scene() {
         m_Selection.clear();
+        delete m_Registry;
     }
 
     void Scene::Update() {
@@ -25,7 +27,7 @@ namespace SE {
             return;
         }
 
-        auto transformView = s_CurrentScene->m_Registry.GetComponentsOfType<Transform2D>();
+        auto transformView = s_CurrentScene->m_Registry->GetComponentsOfType<Transform2D>();
         for (auto& entity : transformView) {
             // Get component from view
             Transform2D& transform = transformView.get<Transform2D>(entity);
@@ -36,7 +38,7 @@ namespace SE {
             transform.UpdateTransform();
         }
 
-        auto cameraView = s_CurrentScene->m_Registry.GetComponentsOfType<WorldCamera>();
+        auto cameraView = s_CurrentScene->m_Registry->GetComponentsOfType<WorldCamera>();
         for (auto& entity : cameraView) {
             // Get component from view
             WorldCamera& camera = cameraView.get<WorldCamera>(entity);
@@ -56,7 +58,7 @@ namespace SE {
     }
 
     Entity Scene::CreateEntity(const std::string& name) {
-        Entity entity(this, m_Registry.GenerateHandle());
+        Entity entity(this, m_Registry->GenerateHandle());
         entity.AddComponent<EntityInfo>().Name = name;
         entity.AddComponent<Transform2D>();
 
@@ -64,7 +66,7 @@ namespace SE {
     }
 
     void Scene::DestroyEntity(Entity entity) {
-        m_Registry.Destroy((entt::entity)entity.GetHandle());
+        m_Registry->Destroy(entity.GetHandle());
     }
 
     void Scene::SetCurrent() {

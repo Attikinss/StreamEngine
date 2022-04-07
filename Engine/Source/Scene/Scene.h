@@ -1,9 +1,11 @@
 #pragma once
-#include "EntityRegistry.h"
 #include <string>
 #include <vector>
 
 namespace SE {
+	class Entity;
+	class EntityRegistry;
+
 	class Scene {
 	public:
 		Scene(const std::string& name = "Untitled");
@@ -13,7 +15,7 @@ namespace SE {
 		void DestroyEntity(Entity entity);
 		void SetCurrent();
 
-		EntityRegistry& GetRegistry() { return m_Registry; }
+		EntityRegistry& GetRegistry() const { return *m_Registry; }
 
 		static void Update();
 		static void FixedUpdate();
@@ -22,7 +24,7 @@ namespace SE {
 		std::string m_Name;
 		bool m_IsCurrent = false;
 		
-		EntityRegistry m_Registry;
+		EntityRegistry* m_Registry = nullptr;
 		std::vector<Entity> m_Selection;
 
 		inline static Scene* s_CurrentScene = nullptr;

@@ -3,13 +3,11 @@
 #include "Components/Component.h"
 #include "Scene.h"
 
-#include <entt/entt.hpp>
-
 namespace SE {
 	class Entity {
 	public:
-		Entity() = default;
-		Entity(Scene* scene, entt::entity handle);
+		Entity();
+		Entity(Scene* scene, uint32_t handle);
 		~Entity();
 
 		void Destroy();
@@ -55,7 +53,7 @@ namespace SE {
 		bool operator!=(const Entity& other) const { return !(*this == other); }
 
 	private:
-		entt::entity m_Handle = entt::null;
-		Scene* m_Scene;
+		uint32_t m_Handle;
+		Scene* m_Scene = nullptr;
 	};
 }
