@@ -1,4 +1,5 @@
 #pragma once
+#include "LayerStack.h"
 #include "Window.h"
 
 namespace SE {
@@ -29,6 +30,9 @@ namespace SE {
 		void Run();
 		bool Shutdown();
 
+		void AttachLayer(Layer* layer);
+		void DetachLayer(Layer* layer);
+
 		const Window& GetWindow() const;
 		static Application& Get();
 
@@ -37,6 +41,8 @@ namespace SE {
 
 	protected:
 		Window* m_Window = nullptr;
+		LayerStack* m_LayerStack = nullptr;
+
 		bool m_IsRunning = false;
 
 		inline static Application* s_Instance = nullptr;
