@@ -1,6 +1,6 @@
+#include "StreamEnginePCH.h"
 #include "Application.h"
 #include "Input.h"
-#include "Logger.h"
 #include "Time.h"
 
 #include "Rendering/Camera.h"
@@ -115,7 +115,17 @@ namespace SE {
 	}
 
 	void Application::DetachLayer(Layer* layer) {
+		if (!layer) {
+			Logger::Error("Layer detachment failed! Layer is null.");
+			return;
+		}
 
+		if (!m_LayerStack) {
+			Logger::Error("Layer stack not initialized! Layer ({}) detachment aborted.", layer->GetNane());
+			return;
+		}
+
+		m_LayerStack->DetachLayer(layer);
 	}
 
 	const Window& Application::GetWindow() const {

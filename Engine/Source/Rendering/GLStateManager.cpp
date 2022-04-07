@@ -1,6 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "GLStateManager.h"
-
-#include "Core/Logger.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

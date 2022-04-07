@@ -1,5 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "Input.h"
-#include "Logger.h"
 #include "Application.h"
 
 #include <GLFW/glfw3.h>

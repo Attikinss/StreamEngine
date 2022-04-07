@@ -1,6 +1,6 @@
+#include "StreamEnginePCH.h"
 #include "Texture.h"
 
-#include "Core/Logger.h"
 #include "StbImage/stb_image.h"
 
 #include <glad/gl.h>

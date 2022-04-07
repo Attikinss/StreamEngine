@@ -1,5 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "Renderer.h"
-#include "Core/Logger.h"
 
 #include "Camera.h"
 #include "Framebuffer.h"

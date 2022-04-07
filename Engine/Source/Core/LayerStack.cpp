@@ -1,5 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "LayerStack.h"
-#include "Logger.h"
 
 namespace SE {
 	LayerStack::LayerStack() {

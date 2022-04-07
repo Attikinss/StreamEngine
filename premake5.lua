@@ -64,6 +64,9 @@ project "Engine"
     cppdialect "C++17"
     staticruntime "on"
     
+    pchheader "StreamEnginePCH.h"
+    pchsource "%{prj.name}/Source/StreamEnginePCH.cpp"
+    
     targetdir ("bin/" .. output_directory .. "/%{prj.name}")
     objdir ("bin-int/" .. output_directory .. "/%{prj.name}")
 

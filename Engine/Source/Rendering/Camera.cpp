@@ -1,5 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "Camera.h"
-#include "Core/Logger.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

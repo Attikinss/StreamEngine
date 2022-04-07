@@ -1,3 +1,4 @@
+#include "StreamEnginePCH.h"
 #include "Material.h"
 #include "Shader.h"
 

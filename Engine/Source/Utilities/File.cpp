@@ -1,7 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "File.h"
-
-#include <fstream>
-#include <sstream>
 
 namespace SE {
     bool File::Exists(const std::string& filepath) {

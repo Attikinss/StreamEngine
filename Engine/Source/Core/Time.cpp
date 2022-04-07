@@ -1,7 +1,5 @@
+#include "StreamEnginePCH.h"
 #include "Time.h"
-#include "Logger.h"
-
-#include <chrono>
 
 namespace SE {
     struct TimeInfo {

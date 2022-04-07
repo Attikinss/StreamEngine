@@ -1,6 +1,6 @@
+#include "StreamEnginePCH.h"
 #include "Shader.h"
 
-#include "Core/Logger.h"
 #include "Utilities/File.h"
 
 #include <glad/gl.h>

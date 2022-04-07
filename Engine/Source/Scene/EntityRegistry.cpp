@@ -1,3 +1,4 @@
+#include "StreamEnginePCH.h"
 #include "EntityRegistry.h"
 
 namespace SE {

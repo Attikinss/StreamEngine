@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "StreamEnginePCH.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace SE {

@@ -1,3 +1,4 @@
+#include "StreamEnginePCH.h"
 #include "Scene.h"
 #include "Entity.h"
 #include "EntityRegistry.h"
