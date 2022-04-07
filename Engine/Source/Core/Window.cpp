@@ -4,11 +4,18 @@
 #include <GLFW/glfw3.h>
 
 namespace SE {
+    static bool s_GLFWInitialized = false;
+
     static GLFWwindow* CreateGLFWWindow(const std::string& title, int32_t width, int32_t height, bool fullscreen) {
         // Initialize glfw if not already
-        glfwInit();
+        if (!s_GLFWInitialized && !glfwInit()) {
+            Logger::Critical("GLFW failed to initialize correctly!");
 
-        // TODO: Move into a context class
+            // TODO: Assert
+            return nullptr;
+        }
+
+        // TODO: Parameterize version numbers
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -21,34 +28,20 @@ namespace SE {
         }
 
         GLFWwindow* windowHandle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-        glfwMakeContextCurrent(windowHandle);
         return windowHandle;
     }
 
     Window::Window(const std::string& title, int32_t width, int32_t height, bool fullscreen)
-        : m_Title(title), m_Width(width), m_Height(height), m_IsFullscreen(fullscreen), m_WindowHandle(CreateGLFWWindow(title, width, height, fullscreen)) {
+        : m_Title(title), m_Width(width), m_Height(height), m_IsFullscreen(fullscreen), m_Context(CreateGLFWWindow(title, width, height, fullscreen)) {
         Logger::Trace("Window Created...");
     }
 
     Window::~Window() {
-        // Only destroy if it actally exists
-        if (m_WindowHandle) {
-            glfwDestroyWindow(m_WindowHandle);
-            m_WindowHandle = nullptr;
-        }
-
         Logger::Trace("Window Destroyed...");
-
-        // TODO: Move somewhere that makes sense
-        glfwTerminate();
     }
-
-    void Window::PollEvents() {
-        glfwPollEvents();
-    }
-
-    void Window::SwapBuffers() {
-        glfwSwapBuffers(m_WindowHandle);
+    
+    void Window::Update() {
+        m_Context.Update();
     }
 
     std::pair<float, float> Window::GetSize() const {
@@ -60,10 +53,10 @@ namespace SE {
     }
 
     GLFWwindow* Window::GetHandle() const {
-        return m_WindowHandle;
+        return m_Context.m_Handle;
     }
 
     bool Window::ShouldClose() const {
-        return glfwWindowShouldClose(m_WindowHandle);
+        return glfwWindowShouldClose(m_Context.m_Handle);
     }
 }
