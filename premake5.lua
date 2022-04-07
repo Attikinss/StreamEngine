@@ -37,6 +37,7 @@ project "Game"
 
         -- Third Party
         "%{ThirdParty.GLFW}",
+        "%{ThirdParty.GLM}",
         "%{ThirdParty.Spdlog}/include"
     }
 
