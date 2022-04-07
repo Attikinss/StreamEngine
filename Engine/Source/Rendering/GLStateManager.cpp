@@ -95,12 +95,12 @@ namespace SE {
 
 	void GLStateManager::EnableBlend() {
 		CheckGladState();
-		s_StateInfo.CullState.Enable();
+		s_StateInfo.BlendState.Enable();
 	}
 
 	void GLStateManager::DisableBlend() {
 		CheckGladState();
-		s_StateInfo.CullState.Disable();
+		s_StateInfo.BlendState.Disable();
 	}
 
 	void GLStateManager::BlendFunc(SrcFactor srcRgb, DestFactor destRgb) {
