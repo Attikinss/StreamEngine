@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "Time.h"
 
+#include "Resource/ResourceManager.h"
+
 #include "Rendering/Camera.h"
 #include "Rendering/Renderer.h"
 #include "Scene/Scene.h"
@@ -47,6 +49,8 @@ namespace SE {
 			return false;
 		}
 
+		ResourceManager::Get().Initialize();
+
 		return m_IsRunning = true;
 	}
 
@@ -84,6 +88,8 @@ namespace SE {
 
 		delete m_LayerStack;
 		m_LayerStack = nullptr;
+
+		ResourceManager::Get().Shutdown();
 
 		if (!Renderer::Shutdown()) {
 			Logger::Critical("Renderer failed to shutdown correctly!");
