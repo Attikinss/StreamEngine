@@ -73,9 +73,6 @@ project "Engine"
     files {
         "%{prj.name}/Source/**.h",
         "%{prj.name}/Source/**.cpp",
-
-        -- Third Party
-        "%{ThirdParty.GLAD}/**.c"
     }
 
     includedirs {
@@ -90,12 +87,14 @@ project "Engine"
     }
     
     libdirs {
+        "%{ThirdParty.GLAD}/lib",
         "%{ThirdParty.GLFW}/lib"
     }
 
     links {
-        "opengl32.lib",
-        "glfw3_mt.lib"
+        "glad.lib",
+        "glfw3_mt.lib",
+        "opengl32.lib"
     }
 
     filter "system.windows"
