@@ -51,6 +51,11 @@ namespace SE {
 	}
 
 	void Application::Run() {
+		// Initialize all layers
+		for (Layer* layer : *m_LayerStack) {
+			layer->Initialize();
+		}
+
 		if (!m_IsRunning) {
 			Logger::Critical("Application has not been initialized! Runtime aborted.");
 			return;
@@ -77,15 +82,16 @@ namespace SE {
 			return false;
 		}
 
+		delete m_LayerStack;
+		m_LayerStack = nullptr;
+
 		if (!Renderer::Shutdown()) {
 			Logger::Critical("Renderer failed to shutdown correctly!");
 			return false;
 		}
 
 		delete m_Window;
-		delete m_LayerStack;
 		m_Window = nullptr;
-		m_LayerStack = nullptr;
 
 		m_IsRunning = false;
 		return true;
@@ -133,14 +139,14 @@ namespace SE {
 			return;
 		}
 
-		for (auto it = m_LayerStack->end(); it != m_LayerStack->begin(); it--) {
+		for (auto it = m_LayerStack->end(); it != m_LayerStack->begin();) {
 			// Event has already been consumed elsewhere
 			if (evt.m_Used) {
 				break;
 			}
 
 			// Propagate event to layer
-			(*it)->OnEvent(evt);
+			(*--it)->OnEvent(evt);
 		}
 	}
 
