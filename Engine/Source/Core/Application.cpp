@@ -132,6 +132,16 @@ namespace SE {
 			m_ShutdownRequested = true;
 			return;
 		}
+
+		for (auto it = m_LayerStack->end(); it != m_LayerStack->begin(); it--) {
+			// Event has already been consumed elsewhere
+			if (evt.m_Used) {
+				break;
+			}
+
+			// Propagate event to layer
+			(*it)->OnEvent(evt);
+		}
 	}
 
 	void Application::OnUpdate() {

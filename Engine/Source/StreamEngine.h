@@ -6,6 +6,11 @@
 #include "Core/Logger.h"
 #include "Core/Time.h"
 
+// ------ EVENTS ------------------- //
+#include "Events/ApplicationEvent.h"
+#include "Events/MouseEvent.h"
+#include "Events/KeyboardEvent.h"
+
 // ------ SCENE -------------------- //
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"

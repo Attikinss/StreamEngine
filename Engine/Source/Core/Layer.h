@@ -1,4 +1,5 @@
 #pragma once
+#include "Events/Event.h"
 #include <string>
 
 namespace SE {
@@ -16,6 +17,8 @@ namespace SE {
 		virtual void Update() = 0;
 		virtual void Render() = 0;
 		virtual void Shutdown() = 0;
+
+		virtual void OnEvent(Event& evt) = 0;
 
 		const std::string& GetNane() const { return m_DebugName; }
 
