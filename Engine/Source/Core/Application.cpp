@@ -23,15 +23,10 @@ namespace SE {
 	Application::~Application() {
 		s_Instance = nullptr;
 
-		if (m_Window) {
-			delete m_Window;
-			m_Window = nullptr;
-		}
-
-		if (m_LayerStack) {
-			delete m_LayerStack;
-			m_LayerStack = nullptr;
-		}
+		delete m_Window;
+		delete m_LayerStack;
+		m_Window = nullptr;
+		m_LayerStack = nullptr;
 	}
 
 	bool Application::Initialize() {
@@ -46,6 +41,7 @@ namespace SE {
 		m_LayerStack = new LayerStack();
 
 		m_Window = new SE::Window("Stream Engine", 1280, 720);
+		m_Window->SetEventCallback(BIND_FUNCTION(Application::OnEvent));
 		if (!Renderer::Initialize()) {
 			Logger::Critical("Renderer failed to initialize correctly!");
 			return false;
@@ -60,7 +56,7 @@ namespace SE {
 			return;
 		}
 
-		while (!m_Window->ShouldClose()) {
+		while (!m_ShutdownRequested) {
 			OnUpdate();
 
 			// Update all layers
@@ -86,15 +82,10 @@ namespace SE {
 			return false;
 		}
 
-		if (m_Window) {
-			delete m_Window;
-			m_Window = nullptr;
-		}
-
-		if (m_LayerStack) {
-			delete m_LayerStack;
-			m_LayerStack = nullptr;
-		}
+		delete m_Window;
+		delete m_LayerStack;
+		m_Window = nullptr;
+		m_LayerStack = nullptr;
 
 		m_IsRunning = false;
 		return true;
@@ -134,6 +125,13 @@ namespace SE {
 
 	Application& Application::Get() {
 		return *s_Instance;
+	}
+
+	void Application::OnEvent(Event& evt) {
+		if (evt.GetEventType() == EventType::WindowClose) {
+			m_ShutdownRequested = true;
+			return;
+		}
 	}
 
 	void Application::OnUpdate() {

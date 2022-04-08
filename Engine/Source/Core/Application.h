@@ -2,6 +2,8 @@
 #include "LayerStack.h"
 #include "Window.h"
 
+#include "Events/ApplicationEvent.h"
+
 namespace SE {
 	struct CommandLineArgs {
 		char** Args = nullptr;
@@ -37,6 +39,7 @@ namespace SE {
 		static Application& Get();
 
 	private:
+		void OnEvent(Event& evt);
 		void OnUpdate();
 
 	protected:
@@ -44,6 +47,7 @@ namespace SE {
 		LayerStack* m_LayerStack = nullptr;
 
 		bool m_IsRunning = false;
+		bool m_ShutdownRequested = false;
 
 		inline static Application* s_Instance = nullptr;
 	};
