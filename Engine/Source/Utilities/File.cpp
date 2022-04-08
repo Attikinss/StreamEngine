@@ -1,6 +1,8 @@
 #include "StreamEnginePCH.h"
 #include "File.h"
 
+#include <filesystem>
+
 namespace SE {
     bool File::Exists(const std::string& filepath) {
         return std::ifstream(filepath.c_str()).good();
@@ -99,5 +101,20 @@ namespace SE {
         }
 
         // TODO: Notify user that the file doesn't exist
+    }
+
+    std::vector<std::string> File::GetFilesAtDirectory(const std::string& filepath) {
+        std::vector<std::string> filepaths;
+        std::stringstream sstream;
+
+        for (const auto& file : std::filesystem::directory_iterator(filepath)) {
+            // TODO Find a better way to do this crap
+            sstream << file.path();
+            std::string path = sstream.str();
+            filepaths.push_back(path.substr(1, path.size() - 2));
+            sstream.str(std::string());
+        }
+
+        return filepaths;
     }
 }

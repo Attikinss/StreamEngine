@@ -14,5 +14,7 @@ namespace SE {
 		static void WriteAllText(const std::string& filepath, const std::string& text);
 		static void WriteAllLines(const std::string& filepath, const std::vector<std::string>& lines);
 		static void WriteAllChars(const std::string& filepath, const std::vector<char>& chars);
+
+		static std::vector<std::string> GetFilesAtDirectory(const std::string& filepath);
 	};
 }

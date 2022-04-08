@@ -48,7 +48,10 @@ namespace SE {
 		void SetBindingUnit(uint32_t unit);
 		void Recreate(const TextureCreateInfo& createInfo);
 
+		bool CreatedSuccessfully() const { return m_CreationSuccessful; }
+
 	private:
 		uint32_t m_BindingUnit = 0;
+		bool m_CreationSuccessful = false;
 	};
 }

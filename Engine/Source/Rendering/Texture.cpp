@@ -56,6 +56,7 @@ namespace SE {
 
 			// Create texture/image
 			Recreate(createInfo);
+			m_CreationSuccessful = true;
 		}
 		else {
 			Logger::Error("Failed to load texture: Invalid file!");
