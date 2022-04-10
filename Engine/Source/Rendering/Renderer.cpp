@@ -8,6 +8,9 @@
 #include "VertexArray.h"
 
 #include "Scene/Components/SpriteRenderer.h"
+
+#include "Resource/ResourceManager.h"
+
 #include "GLStateManager.h"
 
 namespace SE {
@@ -103,7 +106,7 @@ namespace SE {
     }
 
     void Renderer::Submit(const SpriteRenderer& spriteRenderer, const glm::mat4& transform) {
-        auto material = spriteRenderer.Material;
+        auto material = spriteRenderer.m_Material;
         if (!material.get()) {
             s_RendererData->MissingMaterialShader->Bind();
             s_RendererData->MissingMaterialShader->SetUniform("u_ViewProjectionMatrix", s_RendererData->ViewProjectionMatrix);
@@ -112,7 +115,7 @@ namespace SE {
         else {
             material->Bind();
 
-            auto sprite = spriteRenderer.Texture;
+            auto sprite = ResourceManager::Get().GetTextureLibrary().GetTexture(spriteRenderer.m_TextureHandle);
             if (!sprite.get()) {
                 // Use a 1x1 white pixel for the shader
                 s_RendererData->WhitePixelTexture->SetBindingUnit(0);

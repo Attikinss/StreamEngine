@@ -6,7 +6,7 @@ namespace SE {
 	public:
 		static ResourceManager& Get();
 
-		const TextureLibrary& GetTextureLibrary() const { return m_TextureLibrary; }
+		TextureLibrary& GetTextureLibrary() { return m_TextureLibrary; }
 
 		void Initialize();
 		void Shutdown();
