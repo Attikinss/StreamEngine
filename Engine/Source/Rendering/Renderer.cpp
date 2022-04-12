@@ -116,7 +116,7 @@ namespace SE {
             material->Bind();
 
             auto sprite = ResourceManager::Get().GetTextureLibrary().GetTexture(spriteRenderer.m_TextureHandle);
-            if (!sprite.get()) {
+            if (!sprite.get() || spriteRenderer.m_TextureHandle == 0) {
                 // Use a 1x1 white pixel for the shader
                 s_RendererData->WhitePixelTexture->SetBindingUnit(0);
                 s_RendererData->WhitePixelTexture->Bind();

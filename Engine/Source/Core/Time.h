@@ -9,7 +9,7 @@ namespace SE {
 		static void Update();
 
 	public:
-		static double GetTime();
-		static double GetDeltaTime();
+		static float GetTime();
+		static float GetDeltaTime();
 	};
 }

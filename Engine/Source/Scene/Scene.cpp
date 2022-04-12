@@ -13,9 +13,6 @@
 namespace SE {
     Scene::Scene(const std::string& name)
         : m_Name(name), m_Registry(new EntityRegistry()) {
-        if (s_CurrentScene == nullptr) {
-            s_CurrentScene = this;
-        }
     }
 
     Scene::~Scene() {
@@ -24,14 +21,12 @@ namespace SE {
     }
 
     void Scene::Update() {
-        if (s_CurrentScene == nullptr) {
-            return;
-        }
+        auto transformView = m_Registry->GetComponentsOfType<Transform2D>();
+        for (auto& entityID : transformView) {
+            Entity entity(this, entityID);
 
-        auto transformView = s_CurrentScene->m_Registry->GetComponentsOfType<Transform2D>();
-        for (auto& entity : transformView) {
             // Get component from view
-            Transform2D& transform = transformView.get<Transform2D>(entity);
+            Transform2D& transform = entity.GetComponent<Transform2D>();
             if (!transform.IsEnabled) {
                 continue;
             }
@@ -39,23 +34,23 @@ namespace SE {
             transform.UpdateTransform();
         }
 
-        auto cameraView = s_CurrentScene->m_Registry->GetComponentsOfType<WorldCamera>();
-        for (auto& entity : cameraView) {
+        auto cameraView = m_Registry->GetComponentsOfType<WorldCamera>();
+        for (auto& entityID : cameraView) {
+            Entity entity(this, entityID);
+
             // Get component from view
-            WorldCamera& camera = cameraView.get<WorldCamera>(entity);
+            WorldCamera& camera = entity.GetComponent<WorldCamera>();
             if (!camera.IsEnabled) {
                 continue;
             }
 
-            glm::mat4 transform = transformView.get<Transform2D>(entity).GetTransform();
+            glm::mat4 transform = entity.GetComponent<Transform2D>().GetTransform();
             camera.GetCamera().SetView(glm::inverse(transform));
         }
     }
 
     void Scene::FixedUpdate() {
-        if (s_CurrentScene == nullptr) {
-            return;
-        }
+
     }
 
     Entity Scene::CreateEntity(const std::string& name) {
@@ -68,10 +63,5 @@ namespace SE {
 
     void Scene::DestroyEntity(Entity entity) {
         m_Registry->Destroy((entt::entity)entity.GetHandle());
-    }
-
-    void Scene::SetCurrent() {
-        // TODO: Unload previous scene
-        s_CurrentScene = this;
     }
 }

@@ -12,8 +12,8 @@ namespace SE {
 
     static TimeInfo s_Info;
 
-    static double GetElapsedTime() {
-        return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - s_Info.InitTime).count() * 0.001 * 0.001 * 0.001;
+    static float GetElapsedTime() {
+        return (float)(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - s_Info.InitTime).count() * 0.001 * 0.001 * 0.001);
     }
 
     void Time::Initialize() {
@@ -27,11 +27,11 @@ namespace SE {
         s_Info.PreviousTime = s_Info.CurrentTime;
     }
 
-    double Time::GetTime() {
+    float Time::GetTime() {
         return s_Info.CurrentTime;
     }
 
-    double Time::GetDeltaTime() {
+    float Time::GetDeltaTime() {
         return s_Info.DeltaTime;
     }
 }

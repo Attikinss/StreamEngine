@@ -13,6 +13,10 @@ namespace SE {
 		void Shutdown();
 
 		const std::shared_ptr<Texture2D>& GetTexture(uint8_t handle) const {
+			if (m_Textures.find(handle) == m_Textures.end()) {
+				return std::shared_ptr<Texture2D>();
+			}
+
 			return m_Textures.at(handle);
 		}
 
