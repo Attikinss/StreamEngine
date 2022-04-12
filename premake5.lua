@@ -10,6 +10,7 @@ workspace "StreamEngine"
 output_directory = "%{cfg.buildcfg}"
 
 ThirdParty = {}
+ThirdParty["Box2D"] = "Engine/ThirdParty/Box2D"
 ThirdParty["ENTT"] = "Engine/ThirdParty/ENTT"
 ThirdParty["GLFW"] = "Engine/ThirdParty/GLFW"
 ThirdParty["GLAD"] = "Engine/ThirdParty/GLAD"
@@ -79,6 +80,7 @@ project "Engine"
         "%{prj.name}/Source",
         
         -- Third Party
+        "%{ThirdParty.Box2D}/include",
         "%{ThirdParty.ENTT}",
         "%{ThirdParty.GLAD}/include",
         "%{ThirdParty.GLFW}/include",
@@ -87,11 +89,13 @@ project "Engine"
     }
     
     libdirs {
+        "%{ThirdParty.Box2D}/lib",
         "%{ThirdParty.GLAD}/lib",
         "%{ThirdParty.GLFW}/lib"
     }
 
     links {
+        "box2d.lib",
         "glad.lib",
         "glfw3_mt.lib",
         "opengl32.lib"
