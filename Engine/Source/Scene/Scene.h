@@ -5,6 +5,7 @@
 namespace SE {
 	class Entity;
 	class EntityRegistry;
+	class PhysicsScene;
 
 	class Scene {
 	public:
@@ -16,6 +17,7 @@ namespace SE {
 
 		EntityRegistry& GetRegistry() const { return *m_Registry; }
 
+		void Start();
 		void Update();
 		void FixedUpdate();
 
@@ -23,6 +25,7 @@ namespace SE {
 		std::string m_Name;
 		bool m_IsCurrent = false;
 		
+		PhysicsScene* m_PhysicsScene = nullptr;
 		EntityRegistry* m_Registry = nullptr;
 		std::vector<Entity> m_Selection;
 	};

@@ -3,10 +3,14 @@
 #include "Entity.h"
 #include "EntityRegistry.h"
 
-#include "Components/Component.h"
+#include "Components/Collider.h"
 #include "Components/EntityInfo.h"
+#include "Components/Rigidbody2D.h"
 #include "Components/Transform2D.h"
 #include "Components/WorldCamera.h"
+
+#include "Physics/PhysicsObject.h"
+#include "Physics/PhysicsScene.h"
 
 #include <entt/entt.hpp>
 
@@ -18,6 +22,65 @@ namespace SE {
     Scene::~Scene() {
         m_Selection.clear();
         delete m_Registry;
+        m_Registry = nullptr;
+
+        delete m_PhysicsScene;
+        m_PhysicsScene = nullptr;
+    }
+
+    void Scene::Start() {
+        m_PhysicsScene = new PhysicsScene({ 0.0f, -9.81f });
+
+        auto rigidbodyView = m_Registry->GetComponentsOfType<Rigidbody2D>();
+        for (auto& entityID : rigidbodyView) {
+            Entity entity(this, entityID);
+
+            // Get component from view
+            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+
+            PhysicsObjectData data;
+            data.Position = transform.Position;
+            data.Rotation = transform.Rotation;
+            data.Type = rigidbody.IsKinematic ? BodyType::KINEMATIC : BodyType::DYNAMIC;
+
+            rigidbody.m_PhysObject = m_PhysicsScene->CreatePhysicsObject(data);
+        }
+
+        auto boxColliderView = m_Registry->GetComponentsOfType<BoxCollider2D>();
+        for (auto& entityID : rigidbodyView) {
+            Entity entity(this, entityID);
+
+            if (!entity.HasComponent<BoxCollider2D>()) {
+                continue;
+            }
+
+            // Get components from view
+            BoxCollider2D& collider = entity.GetComponent<BoxCollider2D>();
+            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+
+            rigidbody.m_PhysObject->SetBoxCollision(collider.Density, collider.Friction, collider.Restitution,
+                collider.RestitutionThreshold, collider.Size * transform.Scale, collider.Offset);
+        }
+
+        auto circleColliderView = m_Registry->GetComponentsOfType<CircleCollider>();
+        for (auto& entityID : rigidbodyView) {
+            Entity entity(this, entityID);
+
+            if (!entity.HasComponent<CircleCollider>()) {
+                continue;
+            }
+
+            // Get components from view
+            CircleCollider& collider = entity.GetComponent<CircleCollider>();
+            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+
+            float radiusMod = fmaxf(transform.Scale.x, transform.Scale.y);
+            rigidbody.m_PhysObject->SetCircleCollision(collider.Density, collider.Friction, collider.Restitution,
+                collider.RestitutionThreshold, collider.Radius * radiusMod, collider.Offset);
+        }
     }
 
     void Scene::Update() {
@@ -50,7 +113,23 @@ namespace SE {
     }
 
     void Scene::FixedUpdate() {
+        m_PhysicsScene->Step();
 
+        auto rigidbodyView = m_Registry->GetComponentsOfType<Rigidbody2D>();
+        for (auto& entityID : rigidbodyView) {
+            Entity entity(this, entityID);
+
+            // Get component from view
+            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+            if (!transform.IsEnabled || !rigidbody.IsEnabled) {
+                continue;
+            }
+
+            PhysicsObject* physObject = rigidbody.m_PhysObject;
+            transform.Position = physObject->GetPosition();
+            transform.Rotation = physObject->GetRotation();
+        }
     }
 
     Entity Scene::CreateEntity(const std::string& name) {
