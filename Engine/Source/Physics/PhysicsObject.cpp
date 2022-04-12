@@ -45,6 +45,28 @@ namespace SE {
 		m_Body->CreateFixture(&fixtureDef);
 	}
 
+	void PhysicsObject::ApplyForce(const glm::vec2& force, ForceType type) {
+		if (type == ForceType::FORCE) {
+			m_Body->ApplyForceToCenter({ force.x, force.y }, true);
+		}
+		else if (type == ForceType::IMPULSE) {
+			m_Body->ApplyLinearImpulseToCenter({ force.x, force.y }, true);
+		}
+	}
+
+	void PhysicsObject::ApplyForceToPoint(const glm::vec2& force, const glm::vec2& point, ForceType type) {
+		if (type == ForceType::FORCE) {
+			m_Body->ApplyForce({ force.x, force.y }, { point.x, point.y }, true);
+		}
+		else if (type == ForceType::IMPULSE) {
+			m_Body->ApplyLinearImpulse({ force.x, force.y }, { point.x, point.y }, true);
+		}	
+	}
+
+	void PhysicsObject::ApplyTorque(float torque) {
+		m_Body->ApplyTorque(torque, true);
+	}
+
 	void PhysicsObject::SetBodyType(BodyType type) {
 		b2BodyType b2Type;
 		switch (type) {
@@ -60,18 +82,54 @@ namespace SE {
 				break;
 		}
 
-		m_Body->SetType(b2Type);
-		if (b2Type == b2BodyType::b2_dynamicBody) {
-			m_Body->SetAwake(true);
+		if (m_Body->GetType() != b2Type) {
+			m_Body->SetType(b2Type);
+			if (b2Type == b2BodyType::b2_dynamicBody) {
+				m_Body->SetAwake(true);
+			}
 		}
 	}
 
-	glm::vec2 PhysicsObject::GetPosition() {
+	BodyType PhysicsObject::GetBodyType() const {
+		switch (m_Body->GetType()) {
+			case b2BodyType::b2_dynamicBody:	return SE::BodyType::DYNAMIC;
+			case b2BodyType::b2_kinematicBody:	return SE::BodyType::KINEMATIC;
+			case b2BodyType::b2_staticBody:		return SE::BodyType::STATIC;
+			default:							return SE::BodyType::STATIC;
+		}
+	}
+
+	void PhysicsObject::SetMass(float mass) {
+		b2MassData massData = m_Body->GetMassData();
+		if (massData.mass == mass) {
+			return;
+		}
+
+		massData.mass = mass;
+		m_Body->SetMassData(&massData);
+	}
+
+	float PhysicsObject::GetMass() const {
+		return m_Body->GetMass();
+	}
+
+	void PhysicsObject::SetPosition(const glm::vec2& position) {
+		m_Body->SetTransform({ position.x, position.y }, m_Body->GetAngle());
+		m_Body->SetAwake(true);
+	}
+
+	glm::vec2 PhysicsObject::GetPosition() const {
 		b2Vec2 position = m_Body->GetPosition();
 		return { position.x, position.y };
 	}
 
-	float PhysicsObject::GetRotation() {
-		return -glm::degrees(m_Body->GetAngle());
+	void PhysicsObject::SetRotation(float rotation) {
+		b2Vec2 position = m_Body->GetPosition();
+		m_Body->SetTransform(position, glm::radians(-rotation));
+		m_Body->SetAwake(true);
+	}
+
+	float PhysicsObject::GetRotation() const {
+		return glm::degrees(-m_Body->GetAngle());
 	}
 }

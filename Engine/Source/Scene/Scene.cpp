@@ -35,16 +35,18 @@ namespace SE {
         for (auto& entityID : rigidbodyView) {
             Entity entity(this, entityID);
 
+            if (!entity.HasComponent<Rigidbody2D>()) {
+                continue;
+            }
+
             // Get component from view
             Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
             Transform2D& transform = entity.GetComponent<Transform2D>();
 
-            PhysicsObjectData data;
-            data.Position = transform.Position;
-            data.Rotation = transform.Rotation;
-            data.Type = rigidbody.IsKinematic ? BodyType::KINEMATIC : BodyType::DYNAMIC;
+            rigidbody.PhysicsData.Position = transform.Position;
+            rigidbody.PhysicsData.Rotation = transform.Rotation;
 
-            rigidbody.m_PhysObject = m_PhysicsScene->CreatePhysicsObject(data);
+            rigidbody.m_PhysObject = m_PhysicsScene->CreatePhysicsObject(rigidbody.PhysicsData);
         }
 
         auto boxColliderView = m_Registry->GetComponentsOfType<BoxCollider2D>();
@@ -113,8 +115,6 @@ namespace SE {
     }
 
     void Scene::FixedUpdate() {
-        m_PhysicsScene->Step();
-
         auto rigidbodyView = m_Registry->GetComponentsOfType<Rigidbody2D>();
         for (auto& entityID : rigidbodyView) {
             Entity entity(this, entityID);
@@ -127,9 +127,20 @@ namespace SE {
             }
 
             PhysicsObject* physObject = rigidbody.m_PhysObject;
-            transform.Position = physObject->GetPosition();
-            transform.Rotation = physObject->GetRotation();
+            physObject->SetMass(rigidbody.PhysicsData.Mass);
+            physObject->SetBodyType(rigidbody.PhysicsData.Type);
+
+            glm::vec2 position = physObject->GetPosition();
+            float rotation = physObject->GetRotation();
+
+            rigidbody.PhysicsData.Position = position;
+            rigidbody.PhysicsData.Rotation = rotation;
+
+            transform.Position = position;
+            transform.Rotation = rotation;
         }
+
+        m_PhysicsScene->Step();
     }
 
     Entity Scene::CreateEntity(const std::string& name) {

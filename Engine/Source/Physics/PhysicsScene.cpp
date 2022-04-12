@@ -27,7 +27,7 @@ namespace SE {
 
 		b2BodyDef bodyDef;
 		bodyDef.position = { data.Position.x, data.Position.y };
-		bodyDef.angle = data.Rotation;
+		bodyDef.angle = glm::radians(data.Rotation);
 		bodyDef.fixedRotation = data.FixedRotation;
 		bodyDef.type = BodyTypeTob2BodyType(data.Type);
 
