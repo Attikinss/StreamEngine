@@ -17,7 +17,7 @@ namespace SE {
 		}
 
 		void Rotate(float delta) {
-			Rotation -= delta;
+			Rotation += delta;
 		}
 
 		const glm::mat4& GetTransform() const { return m_Transform; }

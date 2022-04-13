@@ -29,6 +29,6 @@ namespace SE {
 	}
 
 	void Rigidbody2D::Rotate(float delta) {
-		m_PhysObject->SetRotation(m_PhysObject->GetRotation() + delta);
+		m_PhysObject->SetRotation(m_PhysObject->GetRotation() - delta);
 	}
 }

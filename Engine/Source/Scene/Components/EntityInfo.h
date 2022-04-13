@@ -8,7 +8,8 @@ namespace SE {
 	public:
 		EntityInfo() = default;
 		EntityInfo(const std::string& name, bool enabled = true)
-			: Name(name), IsEnabled(true) {
+			: Name(name) {
+			IsEnabled = enabled;
 		}
 
 		void SetEnabled(bool enabled) {
@@ -18,7 +19,6 @@ namespace SE {
 		static const char* GetName() { return "EntityInfo"; }
 
 	public:
-		bool IsEnabled = true;
 		std::string Name = "Entity";
 	};
 }

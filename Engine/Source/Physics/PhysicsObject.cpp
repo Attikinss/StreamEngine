@@ -125,11 +125,11 @@ namespace SE {
 
 	void PhysicsObject::SetRotation(float rotation) {
 		b2Vec2 position = m_Body->GetPosition();
-		m_Body->SetTransform(position, glm::radians(-rotation));
+		m_Body->SetTransform(position, glm::radians(rotation));
 		m_Body->SetAwake(true);
 	}
 
 	float PhysicsObject::GetRotation() const {
-		return glm::degrees(-m_Body->GetAngle());
+		return glm::degrees(m_Body->GetAngle());
 	}
 }

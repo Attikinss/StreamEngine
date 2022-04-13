@@ -47,41 +47,21 @@ namespace SE {
             rigidbody.PhysicsData.Rotation = transform.Rotation;
 
             rigidbody.m_PhysObject = m_PhysicsScene->CreatePhysicsObject(rigidbody.PhysicsData);
-        }
 
-        auto boxColliderView = m_Registry->GetComponentsOfType<BoxCollider2D>();
-        for (auto& entityID : rigidbodyView) {
-            Entity entity(this, entityID);
+            if (entity.HasComponent<BoxCollider2D>()) {
+                BoxCollider2D& collider = entity.GetComponent<BoxCollider2D>();
 
-            if (!entity.HasComponent<BoxCollider2D>()) {
-                continue;
+                rigidbody.m_PhysObject->SetBoxCollision(collider.Density, collider.Friction, collider.Restitution,
+                    collider.RestitutionThreshold, collider.Size * transform.Scale, collider.Offset);
             }
 
-            // Get components from view
-            BoxCollider2D& collider = entity.GetComponent<BoxCollider2D>();
-            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
-            Transform2D& transform = entity.GetComponent<Transform2D>();
+            if (entity.HasComponent<CircleCollider>()) {
+                CircleCollider& collider = entity.GetComponent<CircleCollider>();
 
-            rigidbody.m_PhysObject->SetBoxCollision(collider.Density, collider.Friction, collider.Restitution,
-                collider.RestitutionThreshold, collider.Size * transform.Scale, collider.Offset);
-        }
-
-        auto circleColliderView = m_Registry->GetComponentsOfType<CircleCollider>();
-        for (auto& entityID : rigidbodyView) {
-            Entity entity(this, entityID);
-
-            if (!entity.HasComponent<CircleCollider>()) {
-                continue;
+                float radiusMod = fmaxf(transform.Scale.x, transform.Scale.y);
+                rigidbody.m_PhysObject->SetCircleCollision(collider.Density, collider.Friction, collider.Restitution,
+                    collider.RestitutionThreshold, collider.Radius * radiusMod, collider.Offset);
             }
-
-            // Get components from view
-            CircleCollider& collider = entity.GetComponent<CircleCollider>();
-            Rigidbody2D& rigidbody = entity.GetComponent<Rigidbody2D>();
-            Transform2D& transform = entity.GetComponent<Transform2D>();
-
-            float radiusMod = fmaxf(transform.Scale.x, transform.Scale.y);
-            rigidbody.m_PhysObject->SetCircleCollision(collider.Density, collider.Friction, collider.Restitution,
-                collider.RestitutionThreshold, collider.Radius * radiusMod, collider.Offset);
         }
     }
 
@@ -131,7 +111,7 @@ namespace SE {
             physObject->SetBodyType(rigidbody.PhysicsData.Type);
 
             glm::vec2 position = physObject->GetPosition();
-            float rotation = physObject->GetRotation();
+            float rotation = -physObject->GetRotation();
 
             rigidbody.PhysicsData.Position = position;
             rigidbody.PhysicsData.Rotation = rotation;

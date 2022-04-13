@@ -14,8 +14,8 @@ namespace SE {
 		void Destroy();
 
 		template<typename T, typename... Args>
-		T& AddComponent(Args&&... args) {
-			if (HasComponent<T>()) {
+		T& AddComponent(Args&&... args) const {
+			if (m_Scene->GetRegistry().HasComponent<T>(m_Handle)) {
 				Logger::Error("Entity already has [{0}] component!", T::GetName());
 				_ASSERT(false);
 			}
@@ -25,8 +25,8 @@ namespace SE {
 		}
 
 		template<typename T>
-		void RemoveComponent() {
-			if (!HasComponent<T>()) {
+		void RemoveComponent() const {m_Handle
+			if (!m_Scene->GetRegistry().HasComponent<T>(m_Handle)) {
 				Logger::Error("Entity does not have [{0}] component!", T::GetName());
 				_ASSERT(false);
 			}
@@ -35,17 +35,17 @@ namespace SE {
 		}
 
 		template<typename T>
-		T& GetComponent() {
+		T& GetComponent() const {
 			return m_Scene->GetRegistry().GetComponent<T>(m_Handle);
 		}
 
 		template<typename T>
-		bool TryGetComponent(T* out) {
+		bool TryGetComponent(T* out) const {
 			return m_Scene->GetRegistry().TryGetComponent<T>(m_Handle, out);
 		}
 
 		template<typename T>
-		bool HasComponent() {
+		bool HasComponent() const {
 			return m_Scene->GetRegistry().HasComponent<T>(m_Handle);
 		}
 
