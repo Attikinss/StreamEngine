@@ -15,8 +15,13 @@
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
 
+// ------ PHYSICS ------------------ //
+#include "Physics/Physics.h"
+
 // ------ COMPONENTS --------------- //
+#include "Scene/Components/Collider.h"
 #include "Scene/Components/EntityInfo.h"
+#include "Scene/Components/Rigidbody2D.h"
 #include "Scene/Components/SpriteRenderer.h"
 #include "Scene/Components/Transform2D.h"
 #include "Scene/Components/WorldCamera.h"

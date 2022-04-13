@@ -20,8 +20,7 @@ namespace SE {
 				_ASSERT(false);
 			}
 
-			Component& component = m_Scene->GetRegistry().AddComponent<T>(m_Handle, std::forward<Args>(args)...);
-			return (T&)component;
+			 return m_Scene->GetRegistry().AddComponent<T>(m_Handle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
