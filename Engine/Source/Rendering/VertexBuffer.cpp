@@ -31,8 +31,8 @@ namespace SE {
 	}
 
 	void VertexBuffer::SetData(uint32_t size, void* data, uint32_t offset) {
-		void* buffer = glMapNamedBuffer(m_Handle, GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT);
-		memcpy((&buffer)[offset], data, size);
+		char* buffer = (char*)glMapNamedBuffer(m_Handle, GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT);
+		memcpy(&buffer[offset], data, size);
 		glUnmapNamedBuffer(m_Handle);
 	}
 
