@@ -14,7 +14,9 @@ namespace SE {
 
 		const std::shared_ptr<Texture2D>& GetTexture(uint8_t handle) const {
 			if (m_Textures.find(handle) == m_Textures.end()) {
-				return std::shared_ptr<Texture2D>();
+				auto sPtr = std::shared_ptr<Texture2D>();
+				sPtr.reset();
+				return sPtr;
 			}
 
 			return m_Textures.at(handle);
