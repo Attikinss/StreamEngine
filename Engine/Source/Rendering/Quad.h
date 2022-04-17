@@ -20,6 +20,17 @@ namespace SE {
             Vertices[1].UV = { 0.0f, 1.0f };
             Vertices[2].UV = { 1.0f, 1.0f };
             Vertices[3].UV = { 1.0f, 0.0f };
+
+            Vertices[0].Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            Vertices[1].Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            Vertices[2].Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+            Vertices[3].Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+            Vertices[0].TextureID = 0.0f;
+            Vertices[1].TextureID = 0.0f;
+            Vertices[2].TextureID = 0.0f;
+            Vertices[3].TextureID = 0.0f;
+
         }
 
         std::vector<Vertex> ToVertexData() {
