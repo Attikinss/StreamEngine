@@ -5,19 +5,19 @@
 
 namespace SE {
 	struct TextureCreateInfo {
-		uint32_t DataType;
-		uint32_t Format;
-		uint32_t InternalFormat;
-		uint32_t Width;
-		uint32_t Height;
-		uint32_t MinFilter;
-		uint32_t MagFilter;
-		uint32_t WrapModeR;
-		uint32_t WrapModeS;
-		uint32_t WrapModeT;
+		uint32_t DataType = 5121;
+		uint32_t Format = 6408;
+		uint32_t InternalFormat = 32856;
+		uint32_t Width = 1;
+		uint32_t Height = 1;
+		uint32_t MinFilter = 9729;
+		uint32_t MagFilter = 9729;
+		uint32_t WrapModeR = 10497;
+		uint32_t WrapModeS = 10497;
+		uint32_t WrapModeT = 10497;
 
-		uint8_t* PixelData;
-		bool GenerateMips;
+		uint8_t* PixelData = nullptr;
+		bool GenerateMips = false;
 	};
 
 	class Texture : public IBindable {
