@@ -10,9 +10,17 @@ namespace SE {
 		return std::make_shared<Texture2D>(filepath);
 	}
 
+	std::shared_ptr<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
+		TextureCreateInfo createInfo;
+		createInfo.Width = width;
+		createInfo.Height = height;
+		return std::make_shared<Texture2D>(createInfo);
+	}
+
 	std::shared_ptr<Texture2D> Texture2D::Create(const TextureCreateInfo& createInfo) {
 		return std::make_shared<Texture2D>(createInfo);
 	}
+
 	Texture2D::Texture2D(const std::string& filepath) {
 		if (filepath.empty()) {
 			Logger::Error("Failed to load texture - No filepath specified!");
@@ -21,15 +29,15 @@ namespace SE {
 
 		stbi_set_flip_vertically_on_load(true);
 
-		int32_t width, height, channelCount;
-		uint8_t* pixelData = stbi_load(filepath.c_str(), &width, &height, &channelCount, 0);
+		int32_t channelCount;
+		uint8_t* pixelData = stbi_load(filepath.c_str(), &m_Width, &m_Height, &channelCount, 0);
 
 		if (pixelData) {
 			TextureCreateInfo createInfo;
 			createInfo.DataType = GL_UNSIGNED_BYTE;
 			createInfo.PixelData = pixelData;
-			createInfo.Width = width;
-			createInfo.Height = height;
+			createInfo.Width = m_Width;
+			createInfo.Height = m_Height;
 			createInfo.WrapModeR = GL_REPEAT;
 			createInfo.WrapModeS = GL_REPEAT;
 			createInfo.WrapModeT = GL_REPEAT;
@@ -53,6 +61,8 @@ namespace SE {
 				createInfo.Format = GL_RGBA;
 				createInfo.InternalFormat = GL_RGBA8;
 			}
+
+			m_DataFormat = createInfo.Format;
 
 			// Create texture/image
 			Recreate(createInfo);
@@ -82,11 +92,23 @@ namespace SE {
 		glBindTextureUnit(m_BindingUnit, 0);
 	}
 
+	void Texture2D::SetData(uint32_t size, void* data) {
+		glTextureSubImage2D(m_Handle, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
+
+	void Texture2D::SetPixel(uint32_t x, uint32_t y, void* data) {
+		glTextureSubImage2D(m_Handle, 0, x, y, 1, 1, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
+
 	void Texture2D::SetBindingUnit(uint32_t unit) {
 		m_BindingUnit = unit;
 	}
 
 	void Texture2D::Recreate(const TextureCreateInfo& createInfo) {
+		m_Width = createInfo.Width;
+		m_Height = createInfo.Height;
+		m_DataFormat = createInfo.Format;
+		
 		if (m_Handle) {
 			glDeleteTextures(1, &m_Handle);
 		}
