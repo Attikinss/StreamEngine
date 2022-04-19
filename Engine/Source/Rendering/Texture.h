@@ -28,6 +28,9 @@ namespace SE {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
+		virtual bool operator==(const Texture& other) const = 0;
+		virtual bool operator!=(const Texture& other) const = 0;
+
 		uint32_t GetHandle() const {
 			return m_Handle;
 		}
@@ -56,6 +59,9 @@ namespace SE {
 		std::pair<int32_t, int32_t> GetSize() const {
 			return { m_Width, m_Height };
 		}
+
+		bool operator==(const Texture& other) const override { return m_Handle == other.GetHandle(); }
+		bool operator!=(const Texture& other) const override { return !(*this == other); }
 
 	private:
 		int32_t m_Width = 0;

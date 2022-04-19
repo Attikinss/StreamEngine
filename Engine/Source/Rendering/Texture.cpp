@@ -27,7 +27,7 @@ namespace SE {
 			_ASSERT(false);
 		}
 
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(false);
 
 		int32_t channelCount;
 		uint8_t* pixelData = stbi_load(filepath.c_str(), &m_Width, &m_Height, &channelCount, 0);
