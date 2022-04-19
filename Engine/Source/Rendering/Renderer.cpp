@@ -70,18 +70,14 @@ namespace SE {
                 "Assets/Shaders/Framebuffer.vert",
                 "Assets/Shaders/Framebuffer.frag"
             });
+            FramebufferShader->Bind();
+            FramebufferShader->SetUniform("u_ColorAttachment", 0);
 
             // Create default shader for general purpose rendering
             DefaultShader = Shader::Create({
                 "Assets/Shaders/Default.vert",
                 "Assets/Shaders/Default.frag"
             });
-
-            // Create default white pixel texture
-            uint32_t whitePixel = 0xffffffff;
-            WhitePixelTexture = Texture2D::Create(1, 1);
-            WhitePixelTexture->SetData(sizeof(uint32_t), &whitePixel);
-            Textures[0] = WhitePixelTexture;
 
             // Bind all texture samplers for the default shader
             int32_t samplers[32];
@@ -90,6 +86,12 @@ namespace SE {
             }
             DefaultShader->Bind();
             DefaultShader->SetUniform("u_Textures", samplers, 32);
+
+            // Create default white pixel texture
+            uint32_t whitePixel = 0xffffffff;
+            WhitePixelTexture = Texture2D::Create(1, 1);
+            WhitePixelTexture->SetData(sizeof(uint32_t), &whitePixel);
+            Textures[0] = WhitePixelTexture;
         }
     };
 
@@ -117,68 +119,42 @@ namespace SE {
     }
 
     void Renderer::BeginFrame(const Camera& camera) {
-        uint32_t whitePixel = 0xffffffff;
         s_RendererData->Framebuffer->Bind();
         s_RendererData->ViewProjectionMatrix = camera.GetViewProjection();
+        s_RendererData->DefaultShader->Bind();
+        s_RendererData->DefaultShader->SetUniform("u_ViewProjectionMatrix", s_RendererData->ViewProjectionMatrix);
         //glm::vec3 viewPosition = glm::inverse(camera.GetView())[3];
 
         GLStateManager::Clear();
     }
 
     void Renderer::EndFrame() {
-        s_RendererData->DefaultShader->Bind();
-        s_RendererData->DefaultShader->SetUniform("u_ViewProjectionMatrix", s_RendererData->ViewProjectionMatrix);
-
-        for (uint32_t i = 0; i < s_RendererData->TextureBindIndex; i++) {
-            s_RendererData->Textures[i]->SetBindingUnit(i);
-            s_RendererData->Textures[i]->Bind();
-        }
-
-        s_RendererData->BatchVAO->Bind();
-        s_RendererData->BatchVAO->GetVertexBuffers()[0]->Bind();
-        GLStateManager::DrawArrays(s_RendererData->BatchVertCount, 0);
-
-        s_RendererData->DefaultShader->Unbind();
-
-        s_RendererData->BatchSize = 0;
-        s_RendererData->TextureBindIndex = 1;
-        s_RendererData->BatchVertCount = 0;
-        
-        // Bind framebuffer resources
-        s_RendererData->Framebuffer->Unbind();
-        s_RendererData->Framebuffer->BindTexture(0);
-        s_RendererData->FramebufferVAO->Bind();
-        s_RendererData->FramebufferVAO->GetVertexBuffers()[0]->Bind();
-
-        s_RendererData->FramebufferShader->Bind();
-        s_RendererData->FramebufferShader->SetUniform("u_ColorAttachment", 0);
-
-        // Draw framebuffer quad
-        GLStateManager::Clear();
-        GLStateManager::DrawArrays(6, 0);
+        Flush();
     }
 
-    void Renderer::Submit(const SpriteRenderer& spriteRenderer, const glm::mat4& transform) {
-        // An OpenGL handle value of 0 is invalid
-        float textureID = 0.0f;
-        auto texture = ResourceManager::Get().GetTextureLibrary().GetTexture(spriteRenderer.m_TextureHandle);
-        if (texture.get() && texture->GetHandle() != 0) {
-            s_RendererData->Textures[s_RendererData->TextureBindIndex] = texture;
-            textureID = (float)s_RendererData->TextureBindIndex++;
+    void Renderer::Submit(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, Quad& quad) {
+        if (s_RendererData->BatchVertCount >= s_RendererData->BatchSize) {
+            FlushAndBegin();
         }
 
-        // Create quad and assign color
-        Quad quad;
-        quad.Vertices[0].Color = spriteRenderer.Color;
-        quad.Vertices[1].Color = spriteRenderer.Color;
-        quad.Vertices[2].Color = spriteRenderer.Color;
-        quad.Vertices[3].Color = spriteRenderer.Color;
+        // An OpenGL handle value of 0 is invalid
+        uint32_t textureID = 0;
+        if (spriteRenderer.m_Texture.get() && spriteRenderer.m_Texture->GetHandle() != 0) {
+            for (uint32_t i = 0; i < s_RendererData->TextureBindIndex; i++) {
+                if (s_RendererData->Textures[i].get() && *spriteRenderer.m_Texture.get() == *s_RendererData->Textures[i].get()) {
+                    textureID = i;
+                    break;
+                }
+            }
+
+            if (textureID == 0) {
+                s_RendererData->Textures[s_RendererData->TextureBindIndex] = spriteRenderer.m_Texture;
+                textureID = s_RendererData->TextureBindIndex++;
+            }
+        }
 
         // Will either be 0 or a number referring to a texture bind unit
-        quad.Vertices[0].TextureID = textureID;
-        quad.Vertices[1].TextureID = textureID;
-        quad.Vertices[2].TextureID = textureID;
-        quad.Vertices[3].TextureID = textureID;
+        quad.SetTextureID(textureID);
 
         // Create buffer for this quad
         char* buffer = new char[(VERTEX_SIZE + 64) * 6];
@@ -204,5 +180,41 @@ namespace SE {
 
     void Renderer::Clear() {
         GLStateManager::Clear();
+    }
+
+    void Renderer::Flush() {
+        // Bind all textures
+        for (uint32_t i = 0; i < s_RendererData->TextureBindIndex; i++) {
+            s_RendererData->Textures[i]->SetBindingUnit(i);
+            s_RendererData->Textures[i]->Bind();
+        }
+
+        // Bind vertex array and shader for batch and draw
+        s_RendererData->DefaultShader->Bind();
+        s_RendererData->BatchVAO->Bind();
+        s_RendererData->BatchVAO->GetVertexBuffers()[0]->Bind();
+        GLStateManager::DrawArrays(s_RendererData->BatchVertCount, 0);
+
+        // Reset data
+        s_RendererData->BatchSize = 0;
+        s_RendererData->TextureBindIndex = 1;
+        s_RendererData->BatchVertCount = 0;
+
+        // Bind framebuffer resources
+        s_RendererData->Framebuffer->Unbind();
+        s_RendererData->Framebuffer->BindTexture(0);
+        s_RendererData->FramebufferVAO->Bind();
+        s_RendererData->FramebufferVAO->GetVertexBuffers()[0]->Bind();
+
+        s_RendererData->FramebufferShader->Bind();
+
+        // Draw framebuffer quad
+        GLStateManager::Clear();
+        GLStateManager::DrawArrays(6, 0);
+    }
+
+    void Renderer::FlushAndBegin() {
+        Flush();
+        s_RendererData->Framebuffer->Bind();
     }
 }

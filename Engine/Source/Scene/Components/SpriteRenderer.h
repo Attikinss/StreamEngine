@@ -8,15 +8,16 @@
 
 namespace SE {
 	class SpriteRenderer : public Component {
+		friend class SpriteAnimator;
 		friend class Renderer;
 
 	public:
 		SpriteRenderer() = default;
-		SpriteRenderer(uint8_t textureHandle, const std::shared_ptr<Material>& material)
-			: m_TextureHandle(textureHandle), m_Material(material) {
+		SpriteRenderer(std::shared_ptr<Texture2D> texture, const std::shared_ptr<Material>& material)
+			: m_Texture(texture), m_Material(material) {
 		}
 
-		void SetTexture(uint8_t textureHandle) { m_TextureHandle = textureHandle; }
+		void SetTexture(std::shared_ptr<Texture2D> texture) { m_Texture = texture; }
 		void SetMaterial(const std::shared_ptr<Material>& material) { m_Material = material; }
 
 		static const char* GetName() { return "SpriteRenderer"; }
@@ -28,7 +29,7 @@ namespace SE {
 		bool FlipY = false;
 
 	private:
-		uint8_t m_TextureHandle = 0;
+		std::shared_ptr<Texture2D> m_Texture;
 		std::shared_ptr<Material> m_Material;
 	};
 }

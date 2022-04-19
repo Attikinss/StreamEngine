@@ -3,6 +3,7 @@
 #include <vector>
 
 namespace SE {
+	class Camera;
 	class Entity;
 	class EntityRegistry;
 	class PhysicsScene;
@@ -20,6 +21,8 @@ namespace SE {
 		void Start();
 		void Update();
 		void FixedUpdate();
+		void Render();
+		void Render(const Camera& camera);
 
 	private:
 		std::string m_Name;

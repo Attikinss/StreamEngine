@@ -6,13 +6,18 @@
 #include "Components/Collider.h"
 #include "Components/EntityInfo.h"
 #include "Components/Rigidbody2D.h"
+#include "Components/SpriteAnimator.h"
+#include "Components/SpriteRenderer.h"
 #include "Components/Transform2D.h"
 #include "Components/WorldCamera.h"
 
 #include "Physics/PhysicsObject.h"
 #include "Physics/PhysicsScene.h"
 
-#include <entt/entt.hpp>
+#include "Rendering/Quad.h"
+#include "Rendering/Renderer.h"
+
+#include "Core/Time.h"
 
 namespace SE {
     Scene::Scene(const std::string& name)
@@ -92,6 +97,25 @@ namespace SE {
             glm::mat4 transform = entity.GetComponent<Transform2D>().GetTransform();
             camera.GetCamera().SetView(glm::inverse(transform));
         }
+
+        auto spriteRendererView = m_Registry->GetComponentsOfType<SpriteRenderer>();
+        for (auto& entityID : spriteRendererView) {
+            Entity entity(this, entityID);
+
+            // Get component from view
+            SpriteRenderer& renderer = entity.GetComponent<SpriteRenderer>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+            if (!renderer.IsEnabled) {
+                continue;
+            }
+
+            if (entity.HasComponent<SpriteAnimator>()) {
+                SpriteAnimator& animator = entity.GetComponent<SpriteAnimator>();
+                if (animator.IsEnabled && animator.Animate) {
+                    animator.NextFrame(Time::GetDeltaTime());
+                }
+            }
+        }
     }
 
     void Scene::FixedUpdate() {
@@ -121,6 +145,68 @@ namespace SE {
         }
 
         m_PhysicsScene->Step();
+    }
+
+    void Scene::Render() {
+        // TODO: Use highest priority camera rather than first
+        auto cameraView = m_Registry->GetComponentsOfType<WorldCamera>();
+        if (cameraView.empty()) {
+            return;
+        }
+
+        for (auto& entityID : cameraView) {
+            Entity entity(this, entityID);
+
+            // Use first active camera
+            WorldCamera& camera = entity.GetComponent<WorldCamera>();
+            if (camera.IsEnabled) {
+                Render(camera.GetCamera());
+                break;
+            }
+        }
+    }
+
+    void Scene::Render(const Camera& camera) {
+        Renderer::BeginFrame(camera);
+
+        auto spriteRendererView = m_Registry->GetComponentsOfType<SpriteRenderer>();
+        for (auto& entityID : spriteRendererView) {
+            Entity entity(this, entityID);
+
+            // Get component from view
+            SpriteRenderer& renderer = entity.GetComponent<SpriteRenderer>();
+            Transform2D& transform = entity.GetComponent<Transform2D>();
+            if (!renderer.IsEnabled) {
+                continue;
+            }
+
+            // Create quad and assign color
+            Quad quad;
+            quad.SetColor(renderer.Color);
+
+            if (renderer.FlipX) {
+                quad.FlipX();
+            }
+
+            if (renderer.FlipY) {
+                quad.FlipY();
+            }
+
+            if (entity.HasComponent<SpriteAnimator>()) {
+                SpriteAnimator& animator = entity.GetComponent<SpriteAnimator>();
+                if (animator.IsEnabled && animator.Animate) {
+                    auto [min, max] = animator.GetFrameCoords();
+                    quad.Vertices[0].UV = { min.x, min.y + max.y };
+                    quad.Vertices[1].UV = { min.x, min.y };
+                    quad.Vertices[2].UV = { min.x + max.x, min.y };
+                    quad.Vertices[3].UV = { min.x + max.x, min.y + max.y };
+                }
+            }
+
+            Renderer::Submit(renderer, transform.GetTransform(), quad);
+        }
+
+        Renderer::EndFrame();
     }
 
     Entity Scene::CreateEntity(const std::string& name) {
