@@ -29,7 +29,7 @@ namespace SE {
 
 		if (createInfo.Width == 0 || createInfo.Height == 0) {
 			auto[x, y] = Application::Get().GetWindow().GetSize();
-			Recreate(x, y, true);
+			Recreate((uint32_t)x, (uint32_t)y, true);
 		}
 		else {
 			Recreate(createInfo.Width, createInfo.Height, true);

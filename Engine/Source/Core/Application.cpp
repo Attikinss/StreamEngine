@@ -17,7 +17,7 @@ namespace SE {
 	Application::Application(CommandLineArgs args) {
 		s_Instance = this;
 
-		for (uint32_t i = 0; i < args.ArgsCount; i++) {
+		for (int32_t i = 0; i < args.ArgsCount; i++) {
 			// Compare strings against map of [command, action]
 		}
 	}

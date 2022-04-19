@@ -33,7 +33,7 @@ namespace SE {
 
         }
 
-        std::vector<Vertex> ToVertexData() {
+        std::vector<Vertex> ToVertexData() const {
             return std::vector<Vertex>({ Vertices[0], Vertices[1], Vertices[2], Vertices[2], Vertices[3], Vertices[0] });
         }
 	};

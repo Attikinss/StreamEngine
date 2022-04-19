@@ -4,6 +4,10 @@
 #include "Physics/PhysicsObject.h"
 
 namespace SE {
+	Rigidbody2D::~Rigidbody2D() {
+		delete m_PhysObject;
+	}
+
 	void Rigidbody2D::ApplyForce(const glm::vec2& force, ForceType type) {
 		m_PhysObject->ApplyForce(force, type);
 	}

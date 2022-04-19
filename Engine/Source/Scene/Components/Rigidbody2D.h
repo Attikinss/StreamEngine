@@ -11,9 +11,7 @@ namespace SE {
 
 	public:
 		Rigidbody2D() = default;
-		~Rigidbody2D() {
-			delete m_PhysObject;
-		}
+		~Rigidbody2D();
 
 		static const char* GetName() { return "Rigidbody2D"; }
 

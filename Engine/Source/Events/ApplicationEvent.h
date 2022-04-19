@@ -41,7 +41,7 @@ namespace SE {
 		FileDropEvent(int32_t count, const char** paths)
 			: m_PathCount(count) {
 			m_Paths.reserve(count);
-			for (uint32_t i = 0; i < count; i++) {
+			for (int32_t i = 0; i < count; i++) {
 				m_Paths.emplace_back(paths[i]);
 			}
 		}
