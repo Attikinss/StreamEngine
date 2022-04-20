@@ -145,7 +145,6 @@ namespace SE {
 	class Input {
 	public:
 		static void Initialize();
-		static void Update();
 		static bool GetKey(Key key);
 		static bool GetKeyDown(Key key);
 		static bool GetKeyUp(Key key);

@@ -39,15 +39,6 @@ namespace SE {
 		Logger::Trace("Input Initialized...");
 	}
 
-	void Input::Update() {
-		if (s_Info.CalculateDelta) {
-			s_Info.LastMousePosition = GetMousePosition();
-			return;
-		}
-		
-		s_Info.CalculateDelta = false;
-	}
-
 	bool Input::GetKey(Key key) {
 		// Ensure value is not something random and is already in the input map
 		int keyValue = static_cast<int>(key);

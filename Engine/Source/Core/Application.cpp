@@ -159,7 +159,6 @@ namespace SE {
 	void Application::OnUpdate() {
 		m_Window->Update();
 		
-		Input::Update();
 		Time::Update();
 	}
 }
