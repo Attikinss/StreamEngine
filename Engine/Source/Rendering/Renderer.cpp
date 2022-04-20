@@ -1,6 +1,7 @@
 #include "StreamEnginePCH.h"
 #include "Renderer.h"
 
+#include "Batch.h"
 #include "Camera.h"
 #include "Framebuffer.h"
 #include "Quad.h"
@@ -19,15 +20,12 @@ namespace SE {
         std::shared_ptr<Shader> DefaultShader;
         std::shared_ptr<Texture2D> WhitePixelTexture;
 
+        Batch SpriteBatch;
+
         glm::mat4 ViewProjectionMatrix = glm::mat4(1.0f);
 
-        std::shared_ptr<Framebuffer> Framebuffer;
-        std::shared_ptr<VertexArray> QuadVAO;
         std::shared_ptr<VertexArray> FramebufferVAO;
-        
-        uint16_t BatchSize = 0;
-        uint16_t BatchVertCount = 0;
-        std::shared_ptr<VertexArray> BatchVAO;
+        std::shared_ptr<Framebuffer> Framebuffer;
 
         uint32_t TextureBindIndex = 1;
         std::array<std::shared_ptr<Texture2D>, 32> Textures;
@@ -54,16 +52,13 @@ namespace SE {
             Framebuffer = Framebuffer::Create({ 1280, 720, { FramebufferTextureFormat::RGBA8 } });
 
             // Create vbo and vao for batching
-            auto batchVBO = VertexBuffer::Create((VERTEX_SIZE + 64) * UINT16_MAX);
-            batchVBO->SetLayout({
+            SpriteBatch = Batch(UINT16_MAX + 1, sizeof(glm::mat4), {
                 { DataType::FLOAT3, "a_Position" },
                 { DataType::FLOAT4, "a_Color" },
                 { DataType::FLOAT2, "a_UV" },
                 { DataType::FLOAT, "a_TextureID" },
                 { DataType::MAT4, "a_Transform" }
             });
-            BatchVAO = VertexArray::Create();
-            BatchVAO->AddVertexBuffer(batchVBO);
 
             // Create shader for framebuffer
             FramebufferShader = Shader::Create({
@@ -133,10 +128,6 @@ namespace SE {
     }
 
     void Renderer::Submit(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, Quad& quad) {
-        if (s_RendererData->BatchVertCount >= s_RendererData->BatchSize) {
-            FlushAndBegin();
-        }
-
         // An OpenGL handle value of 0 is invalid
         uint32_t textureID = 0;
         if (spriteRenderer.m_Texture.get() && spriteRenderer.m_Texture->GetHandle() != 0) {
@@ -155,27 +146,16 @@ namespace SE {
 
         // Will either be 0 or a number referring to a texture bind unit
         quad.SetTextureID(textureID);
-
-        // Create buffer for this quad
-        char* buffer = new char[(VERTEX_SIZE + 64) * 6];
         auto vertData = quad.ToVertexData();
-        uint32_t currentSize = 0;
-        
-        for (uint32_t i = 0; i < vertData.size(); i++) {
-            // Write vertex data to buffer and increment running size
-            memcpy(&buffer[currentSize], &vertData[i], VERTEX_SIZE);
-            currentSize += VERTEX_SIZE;
+        glm::mat4 t(transform);
 
-            // Write transform data to buffer and increment running size
-            glm::mat4 t(transform);
-            memcpy(&buffer[currentSize], &t, 64);
-            currentSize += 64;
+        uint32_t spaceNeeded = (uint32_t)(VERTEX_SIZE + sizeof(glm::mat4)) * vertData.size();
+        if (s_RendererData->SpriteBatch.IsFull() || !s_RendererData->SpriteBatch.HasSpace(spaceNeeded)) {
+            FlushAndBegin();
         }
 
         // Write data to vertex buffer and increment batch size
-        s_RendererData->BatchVAO->GetVertexBuffers()[0]->SetData(currentSize, buffer, s_RendererData->BatchSize);
-        s_RendererData->BatchSize += currentSize;
-        s_RendererData->BatchVertCount += 6;
+        s_RendererData->SpriteBatch.AddVertices(vertData, &t, sizeof(glm::mat4));
     }
 
     void Renderer::Clear() {
@@ -191,14 +171,10 @@ namespace SE {
 
         // Bind vertex array and shader for batch and draw
         s_RendererData->DefaultShader->Bind();
-        s_RendererData->BatchVAO->Bind();
-        s_RendererData->BatchVAO->GetVertexBuffers()[0]->Bind();
-        GLStateManager::DrawArrays(s_RendererData->BatchVertCount, 0);
+        s_RendererData->SpriteBatch.Flush();
 
         // Reset data
-        s_RendererData->BatchSize = 0;
         s_RendererData->TextureBindIndex = 1;
-        s_RendererData->BatchVertCount = 0;
 
         // Bind framebuffer resources
         s_RendererData->Framebuffer->Unbind();
