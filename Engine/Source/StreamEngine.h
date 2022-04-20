@@ -12,6 +12,7 @@
 #include "Events/KeyboardEvent.h"
 
 // ------ SCENE -------------------- //
+#include "Scene/EditorCamera.h"
 #include "Scene/Entity.h"
 #include "Scene/Scene.h"
 

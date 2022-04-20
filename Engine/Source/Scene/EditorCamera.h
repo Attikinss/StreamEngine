@@ -8,6 +8,7 @@ namespace SE {
 
 	class EditorCamera : public Camera {
 	public:
+		EditorCamera() = default;
 		EditorCamera(const glm::vec2& viewSize, const glm::vec2& position = { 0.0f, 0.0f }, float rotation = 0.0f);
 		EditorCamera(float viewX, float viewY, const glm::vec2& position = { 0.0f, 0.0f }, float rotation = 0.0f);
 
