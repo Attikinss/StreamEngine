@@ -51,7 +51,7 @@ namespace SE {
 
     void Camera::RecalculateProjection() {
         float aspectRatio = m_ViewSize.x / m_ViewSize.y;
-        m_ProjectionMatrix = glm::ortho(-aspectRatio * m_Zoom, aspectRatio * m_Zoom, -m_Zoom, m_Zoom, -1.0f, 1.0f);
+        m_ProjectionMatrix = glm::ortho(-aspectRatio * m_Zoom, aspectRatio * m_Zoom, -m_Zoom, m_Zoom, -2.0f, 2.0f);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 }

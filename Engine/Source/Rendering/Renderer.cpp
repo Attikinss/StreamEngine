@@ -125,6 +125,17 @@ namespace SE {
 
     void Renderer::EndFrame() {
         Flush();
+        // Bind framebuffer resources
+        s_RendererData->Framebuffer->Unbind();
+        s_RendererData->Framebuffer->BindTexture(0);
+        s_RendererData->FramebufferVAO->Bind();
+        s_RendererData->FramebufferVAO->GetVertexBuffers()[0]->Bind();
+
+        s_RendererData->FramebufferShader->Bind();
+
+        // Draw framebuffer quad
+        GLStateManager::Clear();
+        GLStateManager::DrawArrays(6, 0);
     }
 
     void Renderer::Submit(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, Quad& quad) {
@@ -175,18 +186,6 @@ namespace SE {
 
         // Reset data
         s_RendererData->TextureBindIndex = 1;
-
-        // Bind framebuffer resources
-        s_RendererData->Framebuffer->Unbind();
-        s_RendererData->Framebuffer->BindTexture(0);
-        s_RendererData->FramebufferVAO->Bind();
-        s_RendererData->FramebufferVAO->GetVertexBuffers()[0]->Bind();
-
-        s_RendererData->FramebufferShader->Bind();
-
-        // Draw framebuffer quad
-        GLStateManager::Clear();
-        GLStateManager::DrawArrays(6, 0);
     }
 
     void Renderer::FlushAndBegin() {
