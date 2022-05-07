@@ -4,7 +4,7 @@
 #include <string>
 
 namespace SE {
-#define BIND_FUNCTION(func) [this](auto&&... args) -> decltype(auto) { return this->func(std::forward<decltype(args)>(args)...); }
+#define BIND_FUNCTION(func) [this](auto&&... args) -> decltype(auto) { return func(std::forward<decltype(args)>(args)...); }
 
 	class Event;
 	using EventCallback = std::function<void(Event&)>;
